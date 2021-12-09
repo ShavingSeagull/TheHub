@@ -1,139 +1,132 @@
 /****** CI branding ******/
 :root {
-    /*p for primary, s for secondary, t for tertiary*/
-    --p-orange: #e84610;
-    --p-blue: #009fe3;
-    --p-grey: #4a4a4f;
-    --p-navy: #445261;
-    --p-red: #d63649;
-    --s-grey: #e6ecf0;
-    --s-yellow: #efb920;
-    --s-pink: #ff5a60;
-    --s-teal: #23bbbb;
-    --t-grey: #e0e7FF;
-    --bg-grey: #f5f5f5;
-    --table-grey: #8798AD;
-    --table-darkgrey: #e9e7e7;
-  }
+  /*p for primary, s for secondary, t for tertiary*/
+  --p-orange: #e84610;
+  --p-blue: #009fe3;
+  --p-grey: #4a4a4f;
+  --p-navy: #445261;
+  --p-red: #d63649;
+  --s-grey: #e6ecf0;
+  --s-yellow: #efb920;
+  --s-pink: #ff5a60;
+  --s-teal: #23bbbb;
+  --t-grey: #e0e7FF;
+  --bg-grey: #f5f5f5;
+  --table-grey: #8798AD;
+  --table-darkgrey: #e9e7e7;
+}
+
+p {
+  color: #445261;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.12px;
+  line-height: 14px;
+}
 
 /* Skinny sidenav */
 #burger-menu {
-    left: 0;
-    top: 0;
-    height: 60px;
-    width: 50px;
-    font-size: 1.3rem;
+  left: 0;
+  top: 0;
+  height: 60px;
+  width: 70px;
+  font-size: 1.5rem;
 }
 
 #burger-menu a {
-    position: relative;
-    left: 30%;
-    top: 25%;
+  position: relative;
+  left: 35%;
+  top: 25%;
+  color: var(--p-grey);
 }
 
 #skinny-nav {
-    background-color: #fff;
-    width: 50px;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    z-index: 2;
-    box-shadow: 5px 3px 0 0 rgba(0,0,0,0.16), 0 2px 0 0 rgba(0,0,0,0.12);
-    transition: 0.5s;
-  }
+  background-color: #fff;
+  width: 70px;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  z-index: 2;
+  box-shadow: 5px 3px 0 0 rgba(0,0,0,0.16), 0 2px 0 0 rgba(0,0,0,0.12);
+  transition: 0.5s;
+}
   
-  #skinny-nav-list {
-    position: absolute;
-    top: 100px;
-    left: 0;
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-  }
-  
-  #skinny-nav-list > li > a {
-    padding: 10px 15px;
-    color: var(--p-grey);
-    font-size: 1.3rem;
-    display: block;
-  }
-  
-  #skinny-nav-list > li > a > p {
-    position: relative;
-    bottom: 6px;
-    display: inline;
-    padding-left: 20px;
-    margin: 0;
-  }
-  
-  #skinny-nav-list > li:nth-last-child(2) > a > p {
-    padding-left: 26px; /* Needs a little extra to keep it in line, due to the icon next to it being smaller than the rest */
-  }
-  
-  #skinny-nav-list > li > a:hover {
-    background-color: rgba(0,0,0,0.08);
-    border-left: 3px solid var(--p-orange);
-    transition: 0.1s;
-  }
-  
-  .skinny-nav-profile {
-    height: 100px;
-    padding-left: 5px;
-    padding-top: 15px;
-  }
-  
-  .skinny-nav-profile > p {
-    display: inline;
-    padding-left: 10px;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  #skinny-nav-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 120vh;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 997;
-  }
-  
-  #dashboard-menu, #mentoring-menu {
-    list-style-type: none;
-    background-color: rgba(0,0,0,0.08);
-  }
-  
-  #dashboard-menu > li, #mentoring-menu > li {
-    padding: 5px 16px;
-    font-size: 0.9rem;
-    color: var(--p-grey);
-  }
-  
-  #dashboard-menu > li > a, #mentoring-menu > li > a {
-    font-size: 0.9rem;
-    color: var(--p-grey);
-  }
-  
-  #dashboard-menu > li > a:hover, #mentoring-menu > li > a:hover {
-    color: var(--p-orange);
-  }
-  
-  .burger-menu {
-    background-color: #fff;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 60px;
-    width: 50px;
-    font-size: 1.3rem;
-    z-index: 1040;
-    display: block;
-  }
-  
-  .burger-menu a {
-    position: relative;
-    top: 30%;
-  }
-  
-  /* End of skinny */
+#skinny-nav-list {
+  position: absolute;
+  top: 160px;
+  left: 0;
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+#skinny-nav-list > li > a {
+  padding: 10px 22px;
+  color: var(--p-grey);
+  font-size: 1.6rem;
+  display: block;
+}
+
+#skinny-nav-list > li > a > p {
+  position: relative;
+  bottom: 6px;
+  display: inline;
+  font-size: 12px;
+  padding-left: 20px;
+  margin: 0;
+}
+
+/* #skinny-nav-list > li:nth-last-child(2) > a > p {
+  padding-left: 26px;
+} */
+
+#skinny-nav-list > li > a:hover {
+  background-color: rgba(0,0,0,0.08);
+  border-left: 3px solid var(--p-orange);
+  transition: 0.1s;
+}
+
+.skinny-nav-profile {
+  height: 100px;
+  padding-left: 5px;
+  padding-top: 15px;
+}
+
+.skinny-nav-profile > p {
+  display: inline;
+  padding-left: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#skinny-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120vh;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 50;
+}
+
+#dashboard-menu, #mentoring-menu {
+  list-style-type: none;
+  background-color: rgba(0,0,0,0.08);
+}
+
+#dashboard-menu > li, #mentoring-menu > li {
+  padding: 5px 16px;
+  font-size: 0.9rem;
+  color: var(--p-grey);
+}
+
+#dashboard-menu > li > a, #mentoring-menu > li > a {
+  font-size: 0.9rem;
+  color: var(--p-grey);
+}
+
+#dashboard-menu > li > a:hover, #mentoring-menu > li > a:hover {
+  color: var(--p-orange);
+}
+
+/* End of skinny */

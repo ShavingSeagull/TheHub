@@ -27,7 +27,7 @@
                 <a href="#"><i aria-hidden="true" class="fas fa-bars"></i></a>
             </div>
             <div class="skinny-nav-profile d-none">
-                <img src="{{user.profile_image_url}}" class="img-fluid rounded-circle my-3 ml-2">
+                <img src="{% static 'img/default_profile_nav.jpg' %}" class="img-fluid rounded-circle my-3 ml-2" width="50" height="50" alt="Profile Image">
                 <p>Username</p>
             </div>
             <ul id="skinny-nav-list">
@@ -39,6 +39,7 @@
     <!-- Scripts -->
     <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'lib/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/skinnynav.js' %}"></script>
     <!-- Injected extra scripts -->
     {% block injected_js %}
     {% endblock %}

@@ -12,7 +12,8 @@
     <title>{% block title %}{% endblock %}</title>
 
     <!-- Vendor libraries -->
-    <link rel="stylesheet" href="{% static 'lib/css/bootstrap4/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'lib/bootstrap4/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'lib/fontawesome5/css/all.min.css' %}" />
     <!-- Custom assets -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
     <!-- Injected extra assets -->
@@ -20,10 +21,24 @@
     {% endblock %}
 </head>
 <body>
-    
+    <header>
+        <nav id="skinny-nav">
+            <div id="burger-menu">
+                <a href="#"><i aria-hidden="true" class="fas fa-bars"></i></a>
+            </div>
+            <div class="skinny-nav-profile d-none">
+                <img src="{{user.profile_image_url}}" class="img-fluid rounded-circle my-3 ml-2">
+                <p>Username</p>
+            </div>
+            <ul id="skinny-nav-list">
+                <li><a href="#"><i class="fa fa-chart-line"></i><p class="d-none">Student Progress</p></a></li>
+            </ul>
+        </nav>
+    </header>
+
     <!-- Scripts -->
-    <script src="{% static 'lib/js/jquery/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'lib/js/bootstrap4/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'lib/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
     <!-- Injected extra scripts -->
     {% block injected_js %}
     {% endblock %}

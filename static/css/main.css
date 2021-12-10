@@ -1,6 +1,6 @@
 /****** CI branding ******/
 :root {
-  /*p for primary, s for secondary, t for tertiary*/
+  /* p for primary, s for secondary, t for tertiary */
   --p-orange: #e84610;
   --p-blue: #009fe3;
   --p-grey: #4a4a4f;
@@ -16,6 +16,7 @@
   --table-darkgrey: #e9e7e7;
 }
 
+/*** General styles ***/
 p {
   color: #445261;
   font-size: 12px;
@@ -24,7 +25,13 @@ p {
   line-height: 14px;
 }
 
-/* Skinny sidenav */
+.branded-btn {
+  background-color: var(--s-teal);
+  color: #fff;
+}
+/*** /.General styles ***/
+
+/*** Sidenav ***/
 #burger-menu {
   left: 0;
   top: 0;
@@ -40,18 +47,18 @@ p {
   color: var(--p-grey);
 }
 
-#skinny-nav {
+#sidenav {
   background-color: #fff;
   width: 70px;
   height: 100%;
   position: fixed;
   left: 0;
-  z-index: 2;
+  z-index: 3;
   box-shadow: 5px 3px 0 0 rgba(0,0,0,0.16), 0 2px 0 0 rgba(0,0,0,0.12);
   transition: 0.5s;
 }
   
-#skinny-nav-list {
+#sidenav-list {
   position: absolute;
   top: 160px;
   left: 0;
@@ -60,14 +67,14 @@ p {
   width: 100%;
 }
 
-#skinny-nav-list > li > a {
+#sidenav-list > li > a {
   padding: 10px 22px;
   color: var(--p-grey);
   font-size: 1.6rem;
   display: block;
 }
 
-#skinny-nav-list > li > a > p {
+#sidenav-list > li > a > p {
   position: relative;
   bottom: 6px;
   display: inline;
@@ -80,33 +87,33 @@ p {
   padding-left: 26px;
 } */
 
-#skinny-nav-list > li > a:hover {
+#sidenav-list > li > a:hover {
   background-color: rgba(0,0,0,0.08);
   border-left: 3px solid var(--p-orange);
   transition: 0.1s;
 }
 
-.skinny-nav-profile {
+.sidenav-profile {
   height: 100px;
   padding-left: 5px;
   padding-top: 15px;
 }
 
-.skinny-nav-profile > p {
+.sidenav-profile > p {
   display: inline;
   padding-left: 10px;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-#skinny-nav-overlay {
+#sidenav-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 120vh;
   background-color: rgba(0,0,0,0.5);
-  z-index: 50;
+  z-index: 2;
 }
 
 #dashboard-menu, #mentoring-menu {
@@ -129,4 +136,18 @@ p {
   color: var(--p-orange);
 }
 
-/* End of skinny */
+/*** /.Sidenav ***/
+
+/*** Page top section ***/
+#top-bar {
+  height: 60px;
+  padding: 10px;
+  width: calc(100% - 60px);
+  margin-left: auto;
+  background-color: #8798AD;
+}
+
+#top-bar-search {
+  padding-right: 50px;
+}
+/*** /.Page top section ***/

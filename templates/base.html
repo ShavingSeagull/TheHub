@@ -47,6 +47,11 @@
         </div>
     </header>
 
+    <main>
+        {% block main_content %}
+        {% endblock %}
+    </main>
+
     <!-- Scripts -->
     <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'lib/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>

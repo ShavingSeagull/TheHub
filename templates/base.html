@@ -21,6 +21,7 @@
     {% endblock %}
 </head>
 <body>
+    {% if user.is_authenticated %}
     <header>
         <div id="sidenav-overlay" class="d-none"></div>
         <!-- Sidenav -->
@@ -46,8 +47,9 @@
             </form>
         </div>
     </header>
+    {% endif %}
 
-    <main class="container">
+    <main>
         {% block main_content %}
         {% endblock %}
     </main>

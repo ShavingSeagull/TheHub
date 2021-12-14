@@ -1,5 +1,6 @@
-@import url("../fonts/Montserrat-Regular.ttf");
+/* @import url("../fonts/Montserrat-Regular.ttf"); */
 /* @import url("../fonts/Montserrat-Light.ttf"); */
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Montserrat:wght@300;400;500&display=swap');
 
 /****** CI branding ******/
 :root {
@@ -10,6 +11,7 @@
   --p-navy: #445261;
   --p-red: #d63649;
   --s-grey: #e6ecf0;
+  --s-darkgrey: #4a4a4f;
   --s-yellow: #efb920;
   --s-pink: #ff5a60;
   --s-teal: #23bbbb;
@@ -22,6 +24,7 @@
 /*** General styles ***/
 body {
   font-family: 'Montserrat', sans-serif;
+  color: var(--s-darkgrey);
 }
 
 p {

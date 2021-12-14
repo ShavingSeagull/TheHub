@@ -39,6 +39,10 @@ p {
   background-color: var(--s-teal);
   color: #fff;
 }
+
+.no-floating-footer {
+  min-height: 100vh;
+}
 /*** /.General styles ***/
 
 /*** Sidenav ***/
@@ -164,6 +168,17 @@ p {
 /*** /.Page top section ***/
 
 /*** Media Queries ***/
+@media screen and (max-width: 1200px) {
+  /* Override Bootstrap's Display classes to make the font sizes responsive on smaller screens */
+  .display-1 {
+    font-size: calc(1.625rem + 4.5vw);
+  }
+
+  .display-4 {
+    font-size: calc(1.475rem + 2.5vw);
+  }
+}
+
 @media screen and (max-width: 992px) {
   #burger-menu {
     width: 45px;

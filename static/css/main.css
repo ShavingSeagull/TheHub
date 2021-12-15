@@ -46,17 +46,25 @@ p {
 /*** /.General styles ***/
 
 /*** Sidenav ***/
-#burger-menu {
+/* #burger-menu {
   height: 60px;
   width: 70px;
   font-size: 1.5rem;
-}
+} */
 
 #burger-menu a {
   position: relative;
   left: 35%;
   top: 25%;
   color: var(--p-grey);
+}
+
+#burger-menu {
+  position: fixed;
+  height: 60px;
+  width: 70px;
+  font-size: 1.5rem;
+  z-index: 4;
 }
 
 #sidenav {
@@ -191,5 +199,30 @@ p {
 
   #top-bar {
     width: calc(100% - 40px);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  #sidenav {
+    /* Bit extra needed on the Left property to hide the box-shadow off-screen */
+    left: -260px;
+    width: 250px;
+  }
+
+  #top-bar {
+    width: 100%;
+  }
+
+  #top-bar-brand {
+    padding: 0 40px;
+  }
+
+  #top-bar-search {
+    padding-left: 40px;
+  }
+
+  #burger-menu > a {
+    color: #fff;
+    text-shadow: #4a4a4f 2px 2px 2px;
   }
 }

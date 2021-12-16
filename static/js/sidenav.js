@@ -122,6 +122,7 @@ OVERLAY.click(function() {
     if ($(window).width() < 576) {
         SIDENAV.css('left', '-260px');
         hideElements();
+        changeBurgerMenuColour();
     } else if ($(window).width() < 992) {
         SIDENAV.css('width', '50px');
         hideElements();

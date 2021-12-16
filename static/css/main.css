@@ -11,7 +11,6 @@
   --p-navy: #445261;
   --p-red: #d63649;
   --s-grey: #e6ecf0;
-  --s-darkgrey: #4a4a4f;
   --s-yellow: #efb920;
   --s-pink: #ff5a60;
   --s-teal: #23bbbb;
@@ -21,10 +20,17 @@
   --table-darkgrey: #e9e7e7;
 }
 
+/*
+--------------------------
+        TODO LIST
+--------------------------
+- Align navbar icons when they have been chosen and finalised
+*/
+
 /*** General styles ***/
 body {
   font-family: 'Montserrat', sans-serif;
-  color: var(--s-darkgrey);
+  color: var(--p-grey);
 }
 
 p {
@@ -33,6 +39,10 @@ p {
   font-weight: 500;
   letter-spacing: 1.12px;
   line-height: 14px;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 .branded-btn {
@@ -165,7 +175,7 @@ p {
   font-size: 2.5rem;
   color: #fff;
   padding: 0 10px;
-  text-shadow: #4a4a4f 2px 2px 2px;
+  text-shadow: var(--p-grey) 2px 2px 2px;
 }
 /*** /.Page top section ***/
 
@@ -198,7 +208,7 @@ p {
 
 @media screen and (max-width: 576px) {
   #sidenav {
-    /* Bit extra needed on the Left property to hide the box-shadow off-screen */
+    /* Bit extra needed on the Left property compared to the Width to hide the box-shadow off-screen */
     left: -260px;
     width: 250px;
   }
@@ -217,6 +227,6 @@ p {
 
   #burger-menu > a {
     color: #fff;
-    text-shadow: #4a4a4f 2px 2px 2px;
+    text-shadow: var(--p-grey) 2px 2px 2px;
   }
 }

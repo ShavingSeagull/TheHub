@@ -1,7 +1,7 @@
 /*
-* ------------------------------------------------------------
-* Custom stylesheet for the Accounts pages provided by AllAuth
-* ------------------------------------------------------------
+* ----------------------------------------------------------------------------
+* Custom stylesheet and alterations for the Accounts pages provided by AllAuth
+* ----------------------------------------------------------------------------
 */
 
 /*** All Pages ***/
@@ -9,7 +9,23 @@
     height: 100%;
 }
 
-/** Media Queries for All Pages **/
+/*** /.All Pages ***/
+
+/*** Logout Page ***/
+#logout-page {
+    width: calc(100% - 70px);
+    margin-left: auto;
+}
+/*** /.Logout Page ***/
+
+/*** Media Queries for every page ***/
+@media screen and (max-width: 576px) {
+    #logout-page {
+        width: 100%;
+        margin-left: none;
+    }
+}
+
 @media screen and (max-width: 992px) {
     .responsive-bg {
         background-image: url("../../img/login_image.jpg");
@@ -20,4 +36,3 @@
         background-color: rgba(255,255,255,0.9);
     }
 }
-/*** /.All Pages ***/

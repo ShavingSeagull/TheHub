@@ -29,9 +29,6 @@
         </div>
         <!-- Sidenav -->
         <nav id="sidenav">
-            <!-- <div id="burger-menu">
-                <a href="#"><i aria-hidden="true" class="fas fa-bars"></i></a>
-            </div> -->
             <div class="sidenav-profile d-none">
                 <img src="{% static 'img/default_profile_nav.jpg' %}" class="img-fluid rounded-circle my-3 ml-2" width="50" height="50" alt="Profile Image">
                 <p>Username</p>
@@ -41,7 +38,7 @@
                 {% if user.is_superuser %}
                 <li><a href="#"><i class="fas fa-users-cog"></i><p class="d-none">Admin Area</p></a></li>
                 {% endif %}
-                <li><a href="#"><i class="fas fa-sign-out-alt"></i><p class="d-none">Logout</p></a></li>
+                <li><a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><p class="d-none">Logout</p></a></li>
             </ul>
         </nav>
         <!-- /.Sidenav -->

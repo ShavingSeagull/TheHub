@@ -53,6 +53,15 @@ a:hover {
 .no-floating-footer {
   min-height: 100vh;
 }
+
+/* Override Bootstrap's Display classes to set the lighter font weight on all. 
+*  By default, only some have the lighter font weight, which forms inconsistencies
+*  in the frontend design.
+*/
+.display-1, .display-2, .display-3,
+.display-4, .display-5, .display-6 {
+  font-weight: 300;
+}
 /*** /.General styles ***/
 
 /*** Sidenav ***/
@@ -181,13 +190,32 @@ a:hover {
 
 /*** Media Queries ***/
 @media screen and (max-width: 1200px) {
-  /* Override Bootstrap's Display classes to make the font sizes responsive on smaller screens */
+  /* Override Boostrap's Display classes with the Bootstrap 5 values, as these are responsive on smaller screens (but not in v4).
+  *  These values have been taken directly from Bootstrap 5's open source code, available here:
+  *  https://getbootstrap.com/docs/5.0/getting-started/download/
+  */
   .display-1 {
     font-size: calc(1.625rem + 4.5vw);
   }
 
+  .display-2 {
+    font-size: calc(1.575rem + 3.9vw);
+  }
+
+  .display-3 {
+    font-size: calc(1.525rem + 3.3vw);
+  }
+
   .display-4 {
     font-size: calc(1.475rem + 2.5vw);
+  }
+
+  .display-5 {
+    font-size: calc(1.425rem + 2.1vw);
+  }
+
+  .display-6 {
+    font-size: calc(1.375rem + 1.5vw);
   }
 }
 

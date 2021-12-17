@@ -62,6 +62,11 @@ a:hover {
 .display-4, .display-5, .display-6 {
   font-weight: 300;
 }
+
+h1, h2, h3,
+h4, h5, h6 {
+  font-weight: 300;
+}
 /*** /.General styles ***/
 
 /*** Sidenav ***/

@@ -6,7 +6,21 @@
 
 /* Width is altered via animation in the Homepage JS script */
 #home-header, #home-subheader {
+    color: #fff;
     width: 0;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: #000 6px 6px 2px;
+    cursor: pointer;
+}
+
+.card > p {
+    font-size: 2rem;
+}
+
+.card > p > i {
+    font-size: 3rem;
 }

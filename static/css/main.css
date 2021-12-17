@@ -33,6 +33,11 @@ body {
   color: var(--p-grey);
 }
 
+main {
+  background-color: var(--p-grey);
+  height: 100vh;
+}
+
 p {
   color: #445261;
   font-size: 12px;

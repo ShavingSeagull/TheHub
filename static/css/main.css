@@ -224,6 +224,10 @@ a:hover {
     width: 45px;
   }
 
+  #sidenav {
+    width: 50px;
+  }
+
   #sidenav-list > li > a {
     padding: 10px 15px;
     font-size: 1.5rem;

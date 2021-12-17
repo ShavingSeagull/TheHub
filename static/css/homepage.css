@@ -1,0 +1,12 @@
+/* 
+-------------------------------------
+----- Styling for the Home page -----
+-------------------------------------
+*/
+
+/* Width is altered via animation in the Homepage JS script */
+#home-header, #home-subheader {
+    width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}

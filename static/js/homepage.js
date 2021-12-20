@@ -47,7 +47,9 @@ $(window).resize(function(){
 });
 
 $('.home-card').hover(function(){
+    $(this).addClass('card-pulse');
     $(this).children('p').css('color', '#e84610');
 }, function(){
+    $(this).removeClass('card-pulse');
     $(this).children('p').css('color', '#4a4a4f');
 });

@@ -14,7 +14,7 @@
 }
 
 .card:hover {
-    box-shadow: #000 6px 6px 2px;
+    /* box-shadow: #000 6px 6px 2px; */
     cursor: pointer;
 }
 
@@ -24,6 +24,20 @@
 
 .card > p > i {
     font-size: 3rem;
+}
+
+.card-pulse {
+    animation: pulse-animation 1s infinite;
+}
+
+/* Pulse animation taken and modified from: https://reactgo.com/css-pulse-animation */
+@keyframes pulse-animation {
+    0% {
+        box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+    }
 }
 
 /*** Media Queries ***/

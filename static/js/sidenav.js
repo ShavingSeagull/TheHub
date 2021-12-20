@@ -4,14 +4,18 @@ const NAVPROFILE = $('.sidenav-profile');
 const NAVLISTHIDDENELEMS = $('#sidenav-list').children('li').children('a').children('p');
 const BURGERMENU = $('#burger-menu');
 const OVERLAY = $('#sidenav-overlay');
+const DOCUMENTDROPDOWN = $('.document-dropdown');
+const DOCUMENTMENU = $('#document-menu');
 
 /**
- * Hides the navbar elements, apart from the FontAwesome logo for each nav link.
+ * Hides the navbar elements, apart from the FontAwesome logo, for each nav link.
  */
 function hideElements() {
     OVERLAY.addClass('d-none');
     NAVLISTHIDDENELEMS.addClass('d-none');
     NAVPROFILE.addClass('d-none');
+    DOCUMENTMENU.removeClass('show');
+    DOCUMENTDROPDOWN.removeAttr('data-toggle');
 }
 
 /**
@@ -20,12 +24,13 @@ function hideElements() {
 function showElements() {
     NAVLISTHIDDENELEMS.removeClass('d-none');
     NAVPROFILE.removeClass('d-none');
+    DOCUMENTDROPDOWN.attr('data-toggle', 'collapse');
 }
 
 /**
  * Handles the expanding width of the navbar for small screens.
  */
-function expandSmallerScreens() {
+function expandTablet() {
     SIDENAV.css('width', '250px');
     OVERLAY.removeClass('d-none');
 }
@@ -100,7 +105,7 @@ BURGERMENU.click(function(){
         }
     } else if ($(window).width() < 992) {
         if (SIDENAV.width() == 50) {
-            expandSmallerScreens();
+            expandTablet();
             setTimeout(showElements, 380);
         } else {
             SIDENAV.css('width', '50px');
@@ -114,6 +119,19 @@ BURGERMENU.click(function(){
             SIDENAV.css('width', '70px');
             hideElements();
         }
+    }
+});
+
+// Opens the nav and the document menu automatically if the document button is clicked when the nav is in its collapsed state
+DOCUMENTDROPDOWN.click(function() {
+    if ($(window).width() < 992 && SIDENAV.width() == 50) {
+        expandTablet();
+        setTimeout(showElements, 380);
+        setTimeout(function() { DOCUMENTMENU.addClass('show'); }, 395);
+    } else if ($(window).width() >= 992 && SIDENAV.width() == 70) {
+        expandDesktop();
+        setTimeout(showElements, 440);
+        setTimeout(function() { DOCUMENTMENU.addClass('show'); }, 455);
     }
 });
 

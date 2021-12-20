@@ -34,7 +34,12 @@
                 <p>{{ user.first_name }}</p>
             </div>
             <ul id="sidenav-list">
-                <li><a href="#"><i class="fas fa-file-alt"></i><p class="d-none">Documents Menu</p></a></li>
+                <!-- data-toggle for dropdown is added via JS -->
+                <li><a href="#document-menu" class="document-dropdown"><i class="fas fa-file-alt"></i><p class="d-none">Documents Menu</p></a></li>
+                <ul class="collapse" id="document-menu">
+                    <li><a href="#">Document Lookup</a></li>
+                    <li><a href="#">Document Creation</a></li>
+                </ul>
                 <li><a href="#"><i class="fas fa-user"></i><p class="d-none">Personal Area</p></a></li>
                 <li><a href="#"><i class="fas fa-calendar-alt"></i><p class="d-none">Schedule</p></a></li>
                 <hr />

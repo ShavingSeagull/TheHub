@@ -30,11 +30,11 @@
 /*** General styles ***/
 body {
   font-family: 'Montserrat', sans-serif;
-  color: var(--p-grey);
+  color: var(--p-navy);
 }
 
 main {
-  background-color: var(--p-grey);
+  background-color: var(--p-navy);
   min-height: 100vh;
 }
 
@@ -138,7 +138,6 @@ h4, h5, h6 {
 
 .sidenav-profile {
   height: 100px;
-  /* padding-left: 5px; */
   padding-left: 15px;
   padding-top: 15px;
 }
@@ -172,7 +171,6 @@ h4, h5, h6 {
 }
 
 #document-menu > li > a {
-  /* font-size: 0.9rem; */
   color: var(--p-grey);
 }
 
@@ -239,6 +237,10 @@ h4, h5, h6 {
     width: 50px;
   }
 
+  .sidenav-profile {
+    padding-left: 5px;
+  }
+
   #sidenav-list > li > a {
     padding: 10px 15px;
     font-size: 1.5rem;
@@ -269,7 +271,11 @@ h4, h5, h6 {
   }
 
   #top-bar-search {
-    padding-left: 40px;
+    padding: 15px 0 15px 40px;
+  }
+
+  #top-bar-search > input {
+    width: 80%;
   }
 
   #burger-menu > a {

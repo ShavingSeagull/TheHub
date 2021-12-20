@@ -65,6 +65,16 @@
     </header>
     {% endif %}
 
+    <!-- Renders a permanent banner across the middle of the screen if JS is disabled -->
+    <noscript>
+        <p>
+            This site relies heavily on JavaScript for things from the navbar to
+            inner site operations. As such, the site will be inoperable without
+            scripts enabled.
+        </p>
+        <p>Please enable JavaScript in your browser or switch to a browser that allows scripts.</p>
+    </noscript>
+
     <main>
         {% block main_content %}
         {% endblock %}

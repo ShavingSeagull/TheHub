@@ -72,6 +72,22 @@ h1, h2, h3,
 h4, h5, h6 {
   font-weight: 300;
 }
+
+noscript {
+  width: 100%;
+  background-color: var(--p-red);
+  z-index: 100;
+  position: fixed;
+  top: 40%;
+  left: 0;
+  padding: 20px;
+}
+
+noscript > p {
+  font-size: 1.5rem;
+  color: var(--t-grey);
+  line-height: normal !important;
+}
 /*** /.General styles ***/
 
 /*** Sidenav ***/

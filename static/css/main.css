@@ -35,7 +35,7 @@ body {
 
 main {
   background-color: var(--p-grey);
-  height: 100vh;
+  min-height: 100vh;
 }
 
 p {

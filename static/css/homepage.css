@@ -10,6 +10,7 @@
     width: 0;
     white-space: nowrap;
     overflow: hidden;
+    text-shadow: rgb(20,20,20) 2px 2px 2px;
 }
 
 .card:hover {
@@ -23,4 +24,21 @@
 
 .card > p > i {
     font-size: 3rem;
+}
+
+/*** Media Queries ***/
+@media screen and (max-width: 992px) {
+    .card > p {
+        font-size: 1.5rem;
+        line-height: normal;
+        letter-spacing: normal;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .card > p {
+        font-size: 1rem;
+        line-height: normal;
+        letter-spacing: normal;
+    }
 }

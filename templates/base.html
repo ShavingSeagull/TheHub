@@ -31,10 +31,14 @@
         <nav id="sidenav">
             <div class="sidenav-profile mt-5 d-none">
                 <img src="{% static 'img/default_profile_nav.jpg' %}" class="img-fluid rounded-circle my-3 ml-2" width="50" height="50" alt="Profile Image">
-                <p>Username</p>
+                <p>{{ user.first_name }}</p>
             </div>
             <ul id="sidenav-list">
-                <li><a href="#"><i class="fa fa-chart-line"></i><p class="d-none">Student Progress</p></a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i><p class="d-none">Documents Menu</p></a></li>
+                <li><a href="#"><i class="fas fa-user"></i><p class="d-none">Personal Area</p></a></li>
+                <li><a href="#"><i class="fas fa-calendar-alt"></i><p class="d-none">Schedule</p></a></li>
+                <hr />
+                <li><a href="#"><i class="fas fa-user-plus"></i><p class="d-none">New Staff Area</p></a></li>
                 {% if user.is_superuser %}
                 <li><a href="#"><i class="fas fa-users-cog"></i><p class="d-none">Admin Area</p></a></li>
                 {% endif %}

@@ -34,7 +34,7 @@
 
 @media screen and (max-width: 992px) {
     .responsive-bg {
-        background-image: url("../../img/login_image.jpg");
+        background-image: url("../img/login_image.jpg");
         background-size: cover;
     }
 

@@ -5,6 +5,12 @@
 */
 
 /*** All Pages ***/
+
+/* Override needed to prevent the default grey background on the <main> tag */
+.accounts-base-section {
+    background-color: #fff;
+}
+
 .auth-overlay {
     height: 100%;
 }

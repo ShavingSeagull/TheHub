@@ -36,6 +36,8 @@ body {
 main {
   background-color: var(--p-navy);
   min-height: 100vh;
+  width: calc(100% - 70px);
+  margin-left: auto;
 }
 
 p, #document-menu > li > a {
@@ -245,6 +247,11 @@ noscript > p {
 }
 
 @media screen and (max-width: 992px) {
+  /* Accommodates the smaller navbar for tablets */
+  main {
+    width: calc(100% - 50px);
+  }
+
   #burger-menu {
     width: 45px;
   }
@@ -272,6 +279,11 @@ noscript > p {
 }
 
 @media screen and (max-width: 576px) {
+  main {
+    width: 100%;
+    padding: 0 20px;
+  }
+
   #sidenav {
     /* Bit extra needed on the Left property compared to the Width to hide the box-shadow off-screen */
     left: -260px;

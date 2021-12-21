@@ -13,6 +13,14 @@
     text-shadow: rgb(20,20,20) 2px 2px 2px;
 }
 
+#home-header {
+    font-size: 3rem;
+}
+
+#home-subheader {
+    font-size: 2rem;
+}
+
 .card:hover {
     cursor: pointer;
 }
@@ -46,6 +54,14 @@
         line-height: normal;
         letter-spacing: normal;
     }
+
+    #home-header {
+        font-size: 2.5rem;
+    }
+
+    #home-subheader {
+        font-size: 1.75rem;
+    }
 }
 
 @media screen and (max-width: 576px) {
@@ -53,5 +69,13 @@
         font-size: 1rem;
         line-height: normal;
         letter-spacing: normal;
+    }
+
+    #home-header {
+        font-size: 2rem;
+    }
+
+    #home-subheader {
+        font-size: 1.4rem;
     }
 }

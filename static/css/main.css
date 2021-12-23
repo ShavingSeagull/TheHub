@@ -202,7 +202,7 @@ noscript > p {
 #top-bar {
   width: calc(100% - 60px);
   margin-left: auto;
-  background-color: #8798AD;
+  background-color: var(--p-grey);
 }
 
 #top-bar-brand {
@@ -211,7 +211,18 @@ noscript > p {
   font-size: 2.5rem;
   color: #fff;
   padding: 0 10px;
-  text-shadow: var(--p-grey) 2px 2px 2px;
+  text-shadow: #000 2px 2px 2px;
+}
+
+#top-bar-banner {
+  width: calc(100% - 60px);
+  height: 30px;
+  margin-left: auto;
+  background-color: var(--s-yellow);
+}
+
+.ci-logo {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
 }
 /*** /.Page top section ***/
 

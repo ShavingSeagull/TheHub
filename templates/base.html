@@ -51,17 +51,24 @@
             </ul>
         </nav>
         <!-- /.Sidenav -->
-        
+
         <!-- Top bar -->
         <div id="top-bar" class="navbar">
             <div id="top-bar-brand" class="navbar-brand">
-                <img src="{% static 'img/ci_logo.png' %}" height="50" width="50" class="img-fluid" alt="Code Institute Logo" />
+                <!-- <img src="{% static 'img/ci_logo.png' %}" height="50" width="50" class="img-fluid" alt="Code Institute Logo" /> -->
+                <!-- Switched to designing an svg for the logo so that a drop-shadow could be applied -->
+                <svg class="ci-logo" width="50" height="50">
+                    <circle class="ci_logo__circle" stroke="#e84610" stroke-width="10" fill="transparent" r="18" cx="25" cy="25"/>
+                </svg>
                 The Hub
             </div>
              <form id="top-bar-search" class="form-inline">
                 <input type="text" name="q" placeholder="Search" class="form-control" required />
                 <button type="submit" class="btn branded-btn"><i class="fas fa-search"></i></button>
             </form>
+        </div>
+        <div id="top-bar-banner">
+            <!-- <p id="banner-date"></p> -->
         </div>
         <!-- /.Top bar -->
     </header>

@@ -4,7 +4,7 @@
 
 /****** CI branding ******/
 :root {
-  /* p for primary, s for secondary, t for tertiary */
+  /* p - primary, s - secondary */
   --p-orange: #e84610;
   --p-blue: #009fe3;
   --p-grey: #4a4a4f;
@@ -14,9 +14,8 @@
   --s-yellow: #efb920;
   --s-pink: #ff5a60;
   --s-teal: #23bbbb;
-  --t-grey: #e0e7FF;
   --bg-grey: #f5f5f5;
-  --table-grey: #8798AD;
+  --topbar-grey: #8798AD;
   --table-darkgrey: #e9e7e7;
 }
 
@@ -202,7 +201,7 @@ noscript > p {
 #top-bar {
   width: calc(100% - 60px);
   margin-left: auto;
-  background-color: var(--table-grey);
+  background-color: var(--topbar-grey);
 }
 
 #top-bar-brand {

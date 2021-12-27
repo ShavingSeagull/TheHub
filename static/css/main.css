@@ -1,8 +1,10 @@
-/* @import url("../fonts/Montserrat-Regular.ttf"); */
-/* @import url("../fonts/Montserrat-Light.ttf"); */
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Montserrat:wght@300;400;500&display=swap');
 
-/****** CI branding ******/
+/*
+-----------------------
+      CI BRANDING
+-----------------------
+*/
 :root {
   /* p - primary, s - secondary */
   --p-orange: #e84610;
@@ -26,7 +28,11 @@
 - Align navbar icons when they have been chosen and finalised
 */
 
-/*** General styles ***/
+/*
+--------------------------
+      GENERAL STYLES
+--------------------------
+*/
 body {
   font-family: 'Montserrat', sans-serif;
   color: var(--p-navy);
@@ -60,7 +66,8 @@ a:hover {
   min-height: 100vh;
 }
 
-/* Override Bootstrap's Display classes to set the lighter font weight on all. 
+/* 
+*  Override Bootstrap's Display classes to set the lighter font weight on all. 
 *  By default, only some have the lighter font weight, which forms inconsistencies
 *  in the frontend design.
 */
@@ -89,9 +96,12 @@ noscript > p {
   color: var(--t-grey);
   line-height: normal !important;
 }
-/*** /.General styles ***/
 
-/*** Sidenav ***/
+/*
+-----------------------
+        SIDENAV
+-----------------------
+*/
 #burger-menu a {
   position: relative;
   left: 35%;
@@ -196,9 +206,11 @@ noscript > p {
   color: var(--p-orange);
 }
 
-/*** /.Sidenav ***/
-
-/*** Page top section ***/
+/*
+-----------------------
+    TOP BAR SECTION
+-----------------------
+*/
 #top-bar {
   width: calc(100% - 60px);
   margin-left: auto;
@@ -225,9 +237,64 @@ noscript > p {
   filter: drop-shadow(2px 3px 3px rgb(0 0 0 / 0.4));
   margin-bottom: 5px;
 }
-/*** /.Page top section ***/
 
-/*** Media Queries ***/
+/*
+---------------------------------
+      PAGE HEADERS AND
+      SELECTION CARD EFFECTS
+---------------------------------
+*/
+.page-header, .page-subheader {
+  color: #fff;
+  width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-shadow: rgb(20,20,20) 2px 2px 2px;
+}
+
+.page-header {
+  font-size: 3rem;
+}
+
+.page-subheader {
+  font-size: 2rem;
+}
+
+.selection-card {
+  box-shadow: 5px 5px 2px #000;
+}
+
+.selection-card:hover {
+  cursor: pointer;
+}
+
+.selection-card > p {
+  font-size: 2rem;
+}
+
+.selection-card > p > i {
+  font-size: 3rem;
+}
+
+.card-pulse {
+  animation: pulse-animation 1s infinite;
+}
+
+/* Pulse animation taken and modified from: https://reactgo.com/css-pulse-animation */
+@keyframes pulse-animation {
+  0% {
+      box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.6);
+  }
+  100% {
+      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+  }
+}
+
+/*
+-----------------------------
+        MEDIA QUERIES
+-----------------------------
+*/
 @media screen and (max-width: 1200px) {
   /* Override Boostrap's Display classes with the Bootstrap 5 values, as these are responsive on smaller screens (but not in v4).
   *  These values have been taken directly from Bootstrap 5's open source code, available here:
@@ -288,6 +355,20 @@ noscript > p {
   #document-menu > li {
     padding: 5px 30px;
   }
+
+  .selection-card > p {
+    font-size: 1.5rem;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  .page-header {
+    font-size: 2.5rem;
+  }
+
+  .page-subheader {
+    font-size: 1.75rem;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -321,5 +402,19 @@ noscript > p {
   #burger-menu > a {
     color: #fff;
     text-shadow: var(--p-grey) 2px 2px 2px;
+  }
+
+  .selection-card > p {
+    font-size: 1rem;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  .page-header {
+      font-size: 2rem;
+  }
+
+  .page-subheader {
+      font-size: 1.4rem;
   }
 }

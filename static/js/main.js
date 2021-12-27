@@ -6,26 +6,26 @@
  */
 function animateHeaders() {
     if($(window).width() > 900) {
-        $('#home-header').animate({
+        $('.page-header').animate({
             width: '50%'
         }, 1500, () => {
-            $('#home-subheader').animate({
+            $('.page-subheader').animate({
                 width: '50%'
             }, 1700)
         });
     } else if($(window).width() > 576) {
-        $('#home-header').animate({
+        $('.page-header').animate({
             width: '100%'
         }, 1700, () => {
-            $('#home-subheader').animate({
+            $('.page-subheader').animate({
                 width: '100%'
             }, 1600)
         });
     } else {
-        $('#home-header').animate({
+        $('.page-header').animate({
             width: '100%'
         }, 1600, () => {
-            $('#home-subheader').animate({
+            $('.page-subheader').animate({
                 width: '100%'
             }, 1400)
         });
@@ -41,12 +41,12 @@ $(document).ready(function(){
 *  This is primarily to avoid the headers causing overflow when switched from large to small screens.
 */
 $(window).resize(function(){
-    $('#home-header').css('width', '0');
-    $('#home-subheader').css('width', '0');
+    $('.page-header').css('width', '0');
+    $('.page-subheader').css('width', '0');
     animateHeaders();
 });
 
-$('.home-card').hover(function(){
+$('.selection-card').hover(function(){
     $(this).addClass('card-pulse');
     $(this).children('p').css('color', '#e84610');
 }, function(){

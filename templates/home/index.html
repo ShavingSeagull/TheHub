@@ -2,41 +2,33 @@
 {% load static %}
 {% block title %}Home{% endblock %}
 
-{% block injected_css %}
-<link rel="stylesheet" href="{% static 'css/homepage.css' %}" />
-{% endblock %}
-
 {% block main_content %}
 <section class="container">
     <!-- Header section -->
     <div class="row pt-4">
         <div class="col-12 text-center">
-            <h1 id="home-header" class="mx-auto">Welcome, {{ user.first_name }}</h1>
-            <h3 id="home-subheader" class="mx-auto">What do you require?</h3>
+            <h1 id="home-header" class="page-header mx-auto">Welcome, {{ user.first_name }}</h1>
+            <h3 id="home-subheader" class="page-subheader mx-auto">What do you require?</h3>
         </div>
     </div>
     <!-- Selection cards -->
     <div class="row mt-5">
-        <div class="col-12 col-md-5 card home-card p-4 mb-3 mb-md-5 text-center">
+        <div class="col-12 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
             <p class="mb-4 mb-lg-5"><i class="fas fa-file-alt"></i></p>
             <p>Document Lookup</p>
         </div>
-        <div class="col-12 offset-md-2 col-md-5 card home-card p-4 mb-3 mb-md-5 text-center">
+        <div class="col-12 offset-md-2 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
             <p class="mb-4 mb-lg-5"><i class="fas fa-file-word"></i></p>
             <p>Document Creation</p>
         </div>
-        <div class="col-12 col-md-5 card home-card p-4 mb-3 mb-md-5 text-center">
+        <div class="col-12 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
             <p class="mb-4 mb-lg-5"><i class="fas fa-user-alt"></i></p>
             <p>Personal Area</p>
         </div>
-        <div class="col-12 offset-md-2 col-md-5 card home-card p-4 mb-3 mb-md-5 text-center">
+        <div class="col-12 offset-md-2 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
             <p class="mb-4 mb-lg-5"><i class="fas fa-calendar-alt"></i></p>
             <p>Scheduling</p>
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block injected_js %}
-<script src="{% static 'js/homepage.js' %}"></script>
 {% endblock %}

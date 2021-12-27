@@ -18,7 +18,11 @@ from django.urls import path
 from django.urls.conf import include
 
 urlpatterns = [
+    # Inbuilt Django admin panel
     path('admin/', admin.site.urls),
+    # Custom made admin area
+    path('admin-area/', include('administration.urls')),
     path('', include('home.urls')),
+    path('profile/', include('profiles.urls')),
     path('accounts/', include('allauth.urls')),
 ]

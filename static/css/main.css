@@ -148,10 +148,6 @@ noscript > p {
   margin: 0;
 }
 
-/* #skinny-nav-list > li:nth-last-child(2) > a > p {
-  padding-left: 26px;
-} */
-
 #sidenav-list > li > a:hover {
   background-color: rgba(0,0,0,0.08);
   border-left: 3px solid var(--p-orange);
@@ -187,7 +183,7 @@ noscript > p {
 }
 
 #document-menu > li {
-  padding: 7px 30px;
+  padding: 7px 35px;
   font-size: 0.9rem;
   color: var(--p-grey);
 }
@@ -290,7 +286,7 @@ noscript > p {
   }
 
   #document-menu > li {
-    padding: 5px 20px;
+    padding: 5px 30px;
   }
 }
 

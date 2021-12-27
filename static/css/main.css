@@ -271,11 +271,11 @@ noscript > p {
   cursor: pointer;
 }
 
-.selection-card > p {
+.selection-card p {
   font-size: 2rem;
 }
 
-.selection-card > p > i {
+.selection-card p > i {
   font-size: 3rem;
 }
 
@@ -359,7 +359,7 @@ noscript > p {
     padding: 5px 30px;
   }
 
-  .selection-card > p {
+  .selection-card p {
     font-size: 1.5rem;
     line-height: normal;
     letter-spacing: normal;
@@ -407,7 +407,7 @@ noscript > p {
     text-shadow: var(--p-grey) 2px 2px 2px;
   }
 
-  .selection-card > p {
+  .selection-card p {
     font-size: 1rem;
     line-height: normal;
     letter-spacing: normal;

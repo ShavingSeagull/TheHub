@@ -48,8 +48,8 @@ $(window).resize(function(){
 
 $('.selection-card').hover(function(){
     $(this).addClass('card-pulse');
-    $(this).children('p').css('color', '#e84610');
+    $(this).children('a').children('p').css('color', '#e84610');
 }, function(){
     $(this).removeClass('card-pulse');
-    $(this).children('p').css('color', '#4a4a4f');
+    $(this).children('a').children('p').css('color', '#4a4a4f');
 });

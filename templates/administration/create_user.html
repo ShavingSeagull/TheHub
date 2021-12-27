@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
+{% load crispy_forms_tags %}
+{% block title %}Create User{% endblock %}
+
+{% block injected_css %}
+<link rel="stylesheet" href="{% static 'css/administration.css' %}" />
+{% endblock %}
+
+{% block main_content %}
+<section class="container pb-5">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">Create a User</h1>
+        </div>
+    </div>
+    <form method="POST" action="{% url 'create_user' %}" class="form mt-5">
+        {% csrf_token %}
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Personal Details</legend>
+            {{ form.username | as_crispy_field }}
+            {{ form.email | as_crispy_field }}
+            {{ form.first_name | as_crispy_field }}
+            {{ form.last_name | as_crispy_field }}
+            {{ form.date_joined | as_crispy_field }}
+        </fieldset>
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Permissions</legend>
+            <p>Admin user</p>
+            <label class="switch">
+                <input type="checkbox" name="is_superuser" />
+                <span class="slider round"></span>
+            </label>
+            <p>Active user</p>
+            <label class="switch">
+                <input type="checkbox" name="is_active" />
+                <span class="slider round"></span>
+            </label>
+        </fieldset>
+        <input type="submit" class="btn branded-btn" value="Create user" />
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Admin{% endblock %}
+
+{% block injected_css %}
+<link rel="stylesheet" href="{% static 'css/administration.css' %}" />
+{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">Admin Area</h1>
+        </div>
+    </div>
+    <!-- Selection cards -->
+    <div class="row mt-5">
+        <div class="col-12 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
+            <a href="{% url 'create_user' %}">
+                <p class="mb-4 mb-lg-5"><i class="fas fa-user-plus"></i></p>
+                <p>Create User</p>
+            </a>
+        </div>
+        <div class="col-12 offset-md-2 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
+            <a href="#">
+                <p class="mb-4 mb-lg-5"><i class="fas fa-user-edit"></i></p>
+                <p>Edit User</p>
+            </a>
+        </div>
+        <div class="col-12 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
+            <a href="#">
+                <p class="mb-4 mb-lg-5"><i class="fas fa-user-times"></i></p>
+                <p>Remove User</p>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

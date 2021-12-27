@@ -134,6 +134,11 @@ noscript > p {
   display: block;
 }
 
+/* Fixed width for the icons keeps the nav link text in line vertically */
+#sidenav-list > li > a > i {
+  width: 30px;
+}
+
 #sidenav-list > li > a > p {
   position: relative;
   bottom: 6px;

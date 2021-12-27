@@ -66,6 +66,13 @@ a:hover {
   min-height: 100vh;
 }
 
+.form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 2px #000;
+}
+
 /* 
 *  Override Bootstrap's Display classes to set the lighter font weight on all. 
 *  By default, only some have the lighter font weight, which forms inconsistencies

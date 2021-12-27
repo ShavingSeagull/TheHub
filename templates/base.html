@@ -40,12 +40,12 @@
                     <li><a href="#">Document Lookup</a></li>
                     <li><a href="#">Document Creation</a></li>
                 </ul>
-                <li><a href="#"><i class="fas fa-user"></i><p class="d-none">Personal Area</p></a></li>
+                <li><a href="{% url 'profile' %}"><i class="fas fa-user"></i><p class="d-none">Personal Area</p></a></li>
                 <li><a href="#"><i class="fas fa-calendar-alt"></i><p class="d-none">Schedule</p></a></li>
                 <hr />
                 <li><a href="#"><i class="fas fa-user-plus"></i><p class="d-none">New Staff Area</p></a></li>
                 {% if user.is_superuser %}
-                <li><a href="#"><i class="fas fa-users-cog"></i><p class="d-none">Admin Area</p></a></li>
+                <li><a href="{% url 'admin_area' %}"><i class="fas fa-users-cog"></i><p class="d-none">Admin Area</p></a></li>
                 {% endif %}
                 <li><a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><p class="d-none">Logout</p></a></li>
             </ul>
@@ -55,12 +55,13 @@
         <!-- Top bar -->
         <div id="top-bar" class="navbar">
             <div id="top-bar-brand" class="navbar-brand">
-                <!-- <img src="{% static 'img/ci_logo.png' %}" height="50" width="50" class="img-fluid" alt="Code Institute Logo" /> -->
-                <!-- Switched to designing an svg for the logo so that a drop-shadow could be applied -->
-                <svg class="ci-logo" width="50" height="50">
-                    <circle class="ci_logo__circle" stroke="#e84610" stroke-width="10" fill="transparent" r="18" cx="25" cy="25"/>
-                </svg>
-                The Hub
+                <a href="{% url 'home' %}">
+                    <!-- Switched to designing an svg for the logo so that a drop-shadow could be applied -->
+                    <svg class="ci-logo" width="50" height="50">
+                        <circle class="ci_logo__circle" stroke="#e84610" stroke-width="10" fill="transparent" r="18" cx="25" cy="25"/>
+                    </svg>
+                    The Hub
+                </a>
             </div>
              <form id="top-bar-search" class="form-inline">
                 <input type="text" name="q" placeholder="Search" class="form-control" required />

@@ -32,7 +32,7 @@
             <legend class="fieldset-label text-black mb-3 w-auto">Permissions</legend>
             <p>Admin User <small>(Team Leads and Managers)</small></p>
             <label class="switch">
-                <input type="checkbox" name="is_superuser" />
+                <input type="checkbox" name="is_superuser" id="is-superuser" />
                 <span class="slider round"></span>
             </label>
             <!-- <p>Active user</p>
@@ -44,4 +44,8 @@
         <input type="submit" class="btn branded-btn" value="Create user" />
     </form>
 </section>
+{% endblock %}
+
+{% block injected_js %}
+<script src="{% static 'js/administration.js' %}"></script>
 {% endblock %}

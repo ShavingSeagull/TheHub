@@ -21,6 +21,8 @@
         <fieldset class="mb-4">
             <legend class="fieldset-label text-black mb-3 w-auto">Personal Details</legend>
             {{ form.username | as_crispy_field }}
+            <small class="text-muted">Uniform format is: &lt;forename&gt;&lt;surname&gt;. Such as: johnsmith</small>
+            <br><br>
             {{ form.email | as_crispy_field }}
             {{ form.first_name | as_crispy_field }}
             {{ form.last_name | as_crispy_field }}
@@ -28,16 +30,16 @@
         </fieldset>
         <fieldset class="mb-4">
             <legend class="fieldset-label text-black mb-3 w-auto">Permissions</legend>
-            <p>Admin user</p>
+            <p>Admin User <small>(Team Leads and Managers)</small></p>
             <label class="switch">
                 <input type="checkbox" name="is_superuser" />
                 <span class="slider round"></span>
             </label>
-            <p>Active user</p>
+            <!-- <p>Active user</p>
             <label class="switch">
-                <input type="checkbox" name="is_active" />
+                <input type="checkbox" name="is_active" checked />
                 <span class="slider round"></span>
-            </label>
+            </label> -->
         </fieldset>
         <input type="submit" class="btn branded-btn" value="Create user" />
     </form>

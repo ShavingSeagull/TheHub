@@ -10,14 +10,10 @@ class CreateUserForm(forms.ModelForm):
     """
     class Meta:
         model = User
-        exclude = ('id', 'groups', 'is_staff',
-                   'user_permissions', 'last_login', 'password')
+        fields = ('username', 'email', 'first_name',
+                    'last_name', 'date_joined')
 
     def __init__(self, *args, **kwargs):
-            """
-            Add placeholders, remove auto-generated
-            labels and set autofocus on first field
-            """
             super().__init__(*args, **kwargs)
 
             # Most fields of the Django User model are optional by default.

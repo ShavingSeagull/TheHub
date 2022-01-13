@@ -16,6 +16,22 @@
             <h1 class="page-header mx-auto">Create a User</h1>
         </div>
     </div>
+    <!-- Django form errors -->
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.name }}: {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- ./Django form errors -->
     <form method="POST" action="{% url 'create_user' %}" class="form mt-5">
         {% csrf_token %}
         <fieldset class="mb-4">
@@ -35,11 +51,6 @@
                 <input type="checkbox" name="is_superuser" id="is-superuser" />
                 <span class="slider round"></span>
             </label>
-            <!-- <p>Active user</p>
-            <label class="switch">
-                <input type="checkbox" name="is_active" checked />
-                <span class="slider round"></span>
-            </label> -->
         </fieldset>
         <input type="submit" class="btn branded-btn" value="Create user" />
     </form>

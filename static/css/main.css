@@ -104,6 +104,13 @@ noscript > p {
   line-height: normal !important;
 }
 
+.alert-banner {
+  text-align: center;
+  width: calc(100% - 70px);
+  margin-left: auto;
+  margin-bottom: 0 !important;
+}
+
 /*
 -----------------------
         SIDENAV

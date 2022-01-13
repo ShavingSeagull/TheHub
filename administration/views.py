@@ -38,12 +38,10 @@ def create_user(request):
                 associated_username = User.objects.filter(Q(username=username))
                 associated_email = User.objects.filter(Q(email=email))
 
-                # NEED TO REMOVE THE IS_SUPERUSER FROM THE FORM FIELD IN FORMS.PY
-                # AND REPLACE WITH A STANDALONE ELEMENT THAT IS THEN RETRIEVED HERE
-                # - ERROR SAYS THE FIELD IS REQUIRED WHEN IT ISN'T
-
-                if associated_username.exists() or associated_email.exists():
-                    messages.error("That username or email address has already been taken.")
+                if associated_username.exists():
+                    messages.error(request, "That username has already been taken.")
+                elif associated_email.exists():
+                    messages.error(request, "That email address has already been taken.")
                 else:
                     if is_superuser:
                         new_user = User.objects.create_superuser(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
@@ -70,6 +68,7 @@ def create_user(request):
                         )
                     except BadHeaderError:
                         return HttpResponse("Invalid header")
+                    messages.success(request, "User has been successfully registered")
                     return redirect('home')
             else:
                 messages.error(request, "Form is not valid")

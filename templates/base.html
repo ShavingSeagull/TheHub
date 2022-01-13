@@ -68,9 +68,23 @@
                 <button type="submit" class="btn branded-btn"><i class="fas fa-search"></i></button>
             </form>
         </div>
-        <div id="top-bar-divider">
-            <!-- <p id="banner-date"></p> -->
-        </div>
+        {% if messages %}
+            {% for message in messages %}
+                {% with message.level as level %}
+                    {% if level == 40 %}
+                        <div class="alert alert-danger alert-banner"><strong>{{ message }}</strong></div>
+                    {% elif level == 30 %}
+                        <div class="alert alert-warning alert-banner"><strong>{{ message }}</strong></div>
+                    {% elif level == 25 %}
+                        <div class="alert alert-success alert-banner"><strong>{{ message }}</strong></div>
+                    {% else %}
+                        <div class="alert alert-info alert-banner"><strong>{{ message }}</strong></div>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+        <div id="top-bar-divider"></div>
+        {% endif %}
         <!-- /.Top bar -->
     </header>
     {% endif %}

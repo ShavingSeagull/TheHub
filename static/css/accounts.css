@@ -30,6 +30,11 @@
         width: 100%;
         margin-left: none;
     }
+
+    main {
+        /* Overrides the padding needed on phone screens - doesn't fit the accounts pages */
+        padding: 0 !important;
+    }
 }
 
 @media screen and (max-width: 992px) {

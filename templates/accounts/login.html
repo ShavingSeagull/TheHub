@@ -1,0 +1,20 @@
+{% extends "accounts/accounts_base.html" %}
+{% load bootstrap_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block auth_content %}
+
+<div class="p-5">
+  <h1 class="display-1">The Hub</h1>
+  <h2 class="display-4">A central hub for the Learning Success team</h2>
+
+  <form class="login mt-5" method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form|as_bootstrap }}
+    <a class="button secondaryAction" href="#">Forgot Password?</a>
+    <button class="primaryAction btn branded-btn" type="submit">Sign In</button>
+  </form>
+</div>
+
+{% endblock %}

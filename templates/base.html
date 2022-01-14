@@ -47,7 +47,7 @@
                 {% if user.is_superuser %}
                 <li><a href="{% url 'admin_area' %}"><i class="fas fa-users-cog"></i><p class="d-none">Admin Area</p></a></li>
                 {% endif %}
-                <li><a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i><p class="d-none">Logout</p></a></li>
+                <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i><p class="d-none">Logout</p></a></li>
             </ul>
         </nav>
         <!-- /.Sidenav -->

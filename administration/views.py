@@ -49,9 +49,9 @@ def create_user(request):
                         new_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
                     
                     content = {
-                        'url': request.build_absolute_uri('accounts/password/reset/'),
-                        'username': new_user.username,
-                        'email': new_user.email
+                        'name': new_user.first_name,
+                        'email': new_user.email,
+                        'password': password
                     }
                     subject = "The Hub User Registration"
                     body = render_to_string(

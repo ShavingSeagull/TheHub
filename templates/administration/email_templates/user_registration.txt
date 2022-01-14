@@ -1,0 +1,16 @@
+{% autoescape off %}
+Greetings {{name}},
+
+You have been successfully registered to The Hub - Learning Success's one-stop shop for all things team related.
+Email: {{email}}
+Password: {{password}}
+
+
+It is advised you set your own password via the Password Reset link on the Login page.
+
+
+Sincerely,
+
+The Hub's magic elves
+
+{% endautoescape %}

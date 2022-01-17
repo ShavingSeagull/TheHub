@@ -1,7 +1,19 @@
+from operator import concat
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib import messages
 from .forms import UserLoginForm
 
 
@@ -35,3 +47,15 @@ def logout(request):
     """
     auth.logout(request)
     return redirect('login')
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    """
+    Extends the inbuilt PasswordResetView to customise the templates and email messages used.
+    The inbuilt views are class-based.
+    """
+    template_name = 'accounts/password_reset.html'
+    email_template_name = 'accounts/email_templates/password_reset_email.txt'
+    subject_template_name = 'accounts/email_templates/password_reset_subject.txt'
+    success_message = concat("You have been emailed instructions for setting your new password. ",
+        "If the email doesn't come through, check the address that was used and also check your spam folder.")
+    success_url = reverse_lazy('login')

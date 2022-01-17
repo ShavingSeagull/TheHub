@@ -16,7 +16,11 @@ def admin_area(request):
     Renders the admin area view. Provides a customised, user-friendly
     alternative to the Django admin panel.
     """
-    return render(request, "administration/admin_area.html")
+    if request.user.is_superuser or request.user.is_staff:
+        return render(request, "administration/admin_area.html")
+    else:
+        messages.error(request, "Only admin level staff can access that page")
+        return redirect('home')
 
 @login_required
 def create_user(request):
@@ -26,7 +30,7 @@ def create_user(request):
     first and last name on creation, unlike with the admin panel.
     Users will be created by a system admin, not by the new user themselves.
     """
-    if request.user:
+    if request.user.is_superuser or request.user.is_staff:
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
             if form.is_valid():
@@ -79,5 +83,7 @@ def create_user(request):
         context = {
             'form': form
         }
-
-    return render(request, 'administration/create_user.html', context=context)
+        return render(request, 'administration/create_user.html', context=context)
+    else:
+        messages.error(request, "Only admin level users can access that page")
+        return redirect('home')

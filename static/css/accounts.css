@@ -46,4 +46,9 @@
     .auth-overlay {
         background-color: rgba(255,255,255,0.9);
     }
+
+    main {
+        /* Overrides the calculated width on tablets, due to the navbar being hidden when not logged in */
+        width: 100%;
+    }
 }

@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse
 from django.contrib import messages
@@ -51,7 +52,8 @@ def create_user(request):
                     content = {
                         'name': new_user.first_name,
                         'email': new_user.email,
-                        'password': password
+                        'password': password,
+                        'url': request.build_absolute_uri(reverse('password_reset'))
                     }
                     subject = "The Hub User Registration"
                     body = render_to_string(

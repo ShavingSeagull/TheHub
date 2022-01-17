@@ -6,11 +6,11 @@ Email: {{email}}
 Password: {{password}}
 
 
-It is advised you set your own password via the Password Reset link on the Login page.
+It is advised you set your own password via the Password Reset link: {{url}}.
 
 
 Sincerely,
 
-The Hub's magic elves
+The Hub's magic elves 
 
 {% endautoescape %}

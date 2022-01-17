@@ -14,23 +14,26 @@ def login(request):
     """
     Function to authenticate the user and log them in.
     """
-    next_page = request.GET.get('next') or reverse('home')
-    if request.method == "POST":
-        login_form = UserLoginForm(request.POST)
-        if login_form.is_valid():
-            user = authenticate(login_form.cleaned_data['email_or_username'],
-                                password=login_form.cleaned_data['password'])
-            if user:
-                auth.login(request, user)
-                return redirect(next_page)
-            else:
-                login_form.add_error(
-                    None, "Your username or password are incorrect")
-    else:
-        login_form = UserLoginForm()
+    if not request.user:
+        next_page = request.GET.get('next') or reverse('home')
+        if request.method == "POST":
+            login_form = UserLoginForm(request.POST)
+            if login_form.is_valid():
+                user = authenticate(login_form.cleaned_data['email_or_username'],
+                                    password=login_form.cleaned_data['password'])
+                if user:
+                    auth.login(request, user)
+                    return redirect(next_page)
+                else:
+                    login_form.add_error(
+                        None, "Your username or password are incorrect")
+        else:
+            login_form = UserLoginForm()
 
-    return render(request, 'accounts/login.html',
-                  {'form': login_form, 'next': next_page})
+        return render(request, 'accounts/login.html',
+                    {'form': login_form, 'next': next_page})
+    else:
+        return redirect('home')
 
 def logout(request):
     """

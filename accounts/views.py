@@ -1,19 +1,10 @@
 from operator import concat
-from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib import messages
 from .forms import UserLoginForm
 
 

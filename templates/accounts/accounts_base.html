@@ -8,7 +8,25 @@
 <section class="container-fluid px-0 accounts-base-section">
     <div class="row no-gutters">
         <div class="col-12 col-lg-6 responsive-bg no-floating-footer">
-            <div class="auth-overlay">
+            <div class="auth-overlay p-5">
+                <h1 class="display-1">The Hub</h1>
+                <h2 class="display-4">A central hub for the Learning Success team</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% with message.level as level %}
+                            {% if level == 40 %}
+                                <div class="alert alert-danger text-center mt-4"><strong>{{ message }}</strong></div>
+                            {% elif level == 30 %}
+                                <div class="alert alert-warning text-center mt-4"><strong>{{ message }}</strong></div>
+                            {% elif level == 25 %}
+                                <div class="alert alert-success text-center mt-4"><strong>{{ message }}</strong></div>
+                            {% else %}
+                                <div class="alert alert-info text-center mt-4"><strong>{{ message }}</strong></div>
+                            {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                {% endif %}
+
                 {% block auth_content %}
                 {% endblock %}
             </div>

@@ -14,7 +14,7 @@ def login(request):
     """
     Function to authenticate the user and log them in.
     """
-    if not request.user:
+    if not request.user.is_authenticated:
         next_page = request.GET.get('next') or reverse('home')
         if request.method == "POST":
             login_form = UserLoginForm(request.POST)

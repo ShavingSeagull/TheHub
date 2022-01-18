@@ -21,3 +21,19 @@ class CreateUserForm(forms.ModelForm):
             # thus the 'required' attribute is set on all fields.
             for field in self.fields:
                 self.fields[field].required = True
+
+class EditUserForm(forms.ModelForm):
+    """
+    A form for editing an existing user based on the inbuilt
+    Django User model. Key difference between the Edit and
+    Create form is that the 'username' field is omitted.
+    """
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].required = True

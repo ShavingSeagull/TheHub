@@ -24,6 +24,5 @@ urlpatterns = [
     path('admin-area/', include('administration.urls')),
     path('', include('home.urls')),
     path('profile/', include('profiles.urls')),
-    # path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
 ]

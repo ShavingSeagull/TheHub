@@ -36,6 +36,7 @@ $(document).ready(function(){
         .then(data => {
             let users = JSON.parse(data);
             const fields = users[0]['fields'];
+            $('#username').val(fields['username']);
             $('#id_email').val(fields['email']);
             $('#id_first_name').val(fields['first_name']);
             $('#id_last_name').val(fields['last_name']);
@@ -49,7 +50,7 @@ $(document).ready(function(){
                 $('#is-active').attr('checked', true);
             }
             else {
-                $('#is-active').attr('checked', true);
+                $('#is-active').attr('checked', false);
             }
         })
         .catch(error => {

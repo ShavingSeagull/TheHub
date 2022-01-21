@@ -43,15 +43,29 @@ def create_user(request):
             associated_username = User.objects.filter(Q(username=username))
             associated_email = User.objects.filter(Q(email=email))
 
+            print(f"IS_SUPER (create): {is_superuser}")
+
             if associated_username.exists():
                 messages.error(request, "That username has already been taken.")
             elif associated_email.exists():
                 messages.error(request, "That email address has already been taken.")
             else:
                 if is_superuser:
-                    new_user = User.objects.create_superuser(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+                    new_user = User.objects.create_superuser(
+                        username=username, 
+                        email=email, 
+                        password=password, 
+                        first_name=first_name, 
+                        last_name=last_name
+                    )
                 else:
-                    new_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+                    new_user = User.objects.create_user(
+                        username=username, 
+                        email=email, 
+                        password=password, 
+                        first_name=first_name, 
+                        last_name=last_name
+                    )
                 
                 content = {
                     'name': new_user.first_name,
@@ -93,11 +107,38 @@ def edit_user(request):
     from within the site itself, rather than using the Django
     Admin panel.
     """
-    # NEED TO FINISH OFF THE VIEW AND ENSURE IT EDITS CORRECTLY
     users = User.objects.all()
 
     if request.method == 'POST':
-        pass
+        form = EditUserForm(request.POST)
+        if form.is_valid():
+            username = request.POST.get('username')
+            is_superuser = True if request.POST.get('is_superuser') else False
+            is_active = True if request.POST.get('is_active') else False
+            email = form.cleaned_data['email']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+
+            associated_username = User.objects.filter(Q(username=username))
+            associated_email = User.objects.filter(Q(email=email))
+
+            if not associated_username.exists():
+                messages.error(request, "The user doesn't exist.")
+            elif not associated_email.exists():
+                messages.error(request, "The email address isn't associated with anyone.")
+            else:
+                associated_username.update(
+                    email=email, 
+                    first_name=first_name, 
+                    last_name=last_name, 
+                    is_superuser=is_superuser, 
+                    is_active=is_active
+                )
+
+                messages.success(request, "The user was updated successfully.")
+                return redirect('admin_area')
+        else:
+            messages.error(request, "There was an issue with the form. Please check and try again.")
     else:
         form = EditUserForm()
 
@@ -121,7 +162,7 @@ def user_data_api(request, username):
         user = serializers.serialize(
             "json", 
             User.objects.filter(username=username),
-            fields=('email', 'first_name', 'last_name', 'is_staff', 'is_active')
+            fields=('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active')
         )
         return JsonResponse(user, safe=False)
     else:

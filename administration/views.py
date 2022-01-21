@@ -1,4 +1,3 @@
-import json
 from django.core import serializers
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -42,8 +41,6 @@ def create_user(request):
             is_superuser = request.POST.get('is_superuser')
             associated_username = User.objects.filter(Q(username=username))
             associated_email = User.objects.filter(Q(email=email))
-
-            print(f"IS_SUPER (create): {is_superuser}")
 
             if associated_username.exists():
                 messages.error(request, "That username has already been taken.")
@@ -158,7 +155,7 @@ def user_data_api(request, username):
     user visiting the API URL manually and not sending an AJAX request.
     """
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        # Returns a JSON dataset of all users, with only the necessary fields that can be edited
+        # Returns a JSON dataset of the selected user, with only the necessary fields that can be edited
         user = serializers.serialize(
             "json", 
             User.objects.filter(username=username),

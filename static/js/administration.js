@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 $(document).ready(function(){
     /**
      * The toggle switch is a styled label via CSS. Therefore, the actual <input> checkbox

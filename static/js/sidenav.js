@@ -58,7 +58,7 @@ function expandDesktop() {
  * as it utilizes a different style of navbar and top bar.
  * 
  * The 'resize' param denotes if the function is being run due to the window
- * being actively resized or not - if it is, the default coolouring and shading
+ * being actively resized or not - if it is, the default colouring and shading
  * values just need to be reset and nothing else checked; the checks only need
  * to occur for normal usage of the navbar on smaller devices.
  * 

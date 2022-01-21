@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
+{% load crispy_forms_tags %}
+{% block title %}Edit User{% endblock %}
+
+{% block injected_css %}
+<link rel="stylesheet" href="{% static 'css/administration.css' %}" />
+{% endblock %}
+
+{% block main_content %}
+<section class="container pb-5">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">Edit a User</h1>
+        </div>
+    </div>
+    <!-- Django form errors -->
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.name }}: {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- ./Django form errors -->
+    <form method="POST" action="{% url 'edit_user' %}" class="form mt-5">
+        {% csrf_token %}
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Personal Details</legend>
+            
+            <small class="text-muted">Uniform format is: &lt;forename&gt;&lt;surname&gt;. Such as: johnsmith</small>
+            <br><br>
+            <label for="users">Select a user:</label>
+            <select name="users" id="users">
+                {% for user in users %}
+                    <option class="user-option" value="{{ user.username }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
+            </select>
+            <!-- Username input is hidden - not to be edited, but needed to locate the user on the backend -->
+            <input type="hidden" value="" name="username" id="username">
+            {{ form.email | as_crispy_field }}
+            {{ form.first_name | as_crispy_field }}
+            {{ form.last_name | as_crispy_field }}
+        </fieldset>
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Permissions</legend>
+            <p>Admin User <small>(Team Leads and Managers)</small></p>
+            <label class="switch">
+                <input type="checkbox" name="is_superuser" id="is-superuser" class="slider-input" />
+                <span class="slider round"></span>
+            </label>
+            <p>Is Active <small>(Switching this off is the preferred option to deleting the user outright, to help preserve old documents)</small></p>
+            <label class="switch">
+                <input type="checkbox" name="is_active" id="is-active" class="slider-input" />
+                <span class="slider round"></span>
+            </label>
+        </fieldset>
+        <input type="submit" class="btn branded-btn" value="Edit user" />
+    </form>
+</section>
+{% endblock %}
+
+{% block injected_js %}
+<script src="{% static 'js/administration.js' %}"></script>
+{% endblock %}

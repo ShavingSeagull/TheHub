@@ -147,6 +147,32 @@ def edit_user(request):
 
 @login_required
 @user_passes_test(lambda u:u.is_staff)
+def delete_user(request):
+    """
+    Allows an admin user to delete a user without going through the
+    Django admin panel.
+    NOTE: Switching the user's 'is_active' flag to False via the edit_user
+    function is the preferred method of removing access to the system. This
+    is in the interest of preserving documents they have created and/or
+    contributed on. Only delete the user when it is absolutely necessary.
+    """
+    users = User.objects.all()
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            user = User.objects.get(username=username)
+            user.delete()
+            messages.success(request, "User removed successfully.")
+            return redirect('admin_area')
+        except user.DoesNotExist:
+            messages.error(request, "That user cannot be located.")
+    
+    context = {'users': users}
+    return render(request, "administration/delete_user.html", context=context)
+
+@login_required
+@user_passes_test(lambda u:u.is_staff)
 def user_data_api(request, username):
     """
     Returns the dataset for current users, in order to edit details

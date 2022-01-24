@@ -36,15 +36,15 @@
         {% csrf_token %}
         <fieldset class="mb-4">
             <legend class="fieldset-label text-black mb-3 w-auto">Personal Details</legend>
-            
-            <small class="text-muted">Uniform format is: &lt;forename&gt;&lt;surname&gt;. Such as: johnsmith</small>
-            <br><br>
-            <label for="users">Select a user:</label>
-            <select name="users" id="users">
-                {% for user in users %}
-                    <option class="user-option" value="{{ user.username }}">{{ user.first_name }} {{ user.last_name }}</option>
-                {% endfor %}
-            </select>
+            <div class="form-group">
+                <label for="users">Select a user:</label>
+                <select name="users" id="users">
+                    <option value="" selected disabled>Select:</option>
+                    {% for user in users %}
+                        <option class="user-option" value="{{ user.username }}">{{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <!-- Username input is hidden - not to be edited, but needed to locate the user on the backend -->
             <input type="hidden" value="" name="username" id="username">
             {{ form.email | as_crispy_field }}

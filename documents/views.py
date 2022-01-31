@@ -8,7 +8,6 @@ import google
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import google_auth_oauthlib.flow
-# from google.oauth2.service_account import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -168,3 +167,13 @@ def tester_anna(request):
         print(f'An error occurred: {error}')
     
     return HttpResponse("<p>Done</p>")
+
+def document_list(request):
+    """
+    Display the main overview of documents,
+    which will include Recent Docs, as well
+    as ones relevant for the user. The page
+    also displays the categories and tags to
+    filter by, as well as a Search bar.
+    """
+    return render(request, "documents/document_list.html")

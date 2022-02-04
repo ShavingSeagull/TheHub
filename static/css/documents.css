@@ -14,8 +14,17 @@
     vertical-align: bottom;
 }
 
-.docs-list-card {
+.docs-list-card, .docs-list-sidecard {
     box-shadow: 5px 5px 2px #000;
+}
+
+.docs-list-card {
+    transition: 0.5s;
+}
+
+.docs-list-card:hover {
+    transform: scale(1.1);
+    transition: 0.5s;
 }
 
 .doc-list-card-img {
@@ -36,7 +45,7 @@
     text-align: right;
   }
 
-  .ribbon span {
+.ribbon span {
     font-size: 10px;
     font-weight: bold;
     color: #FFF;
@@ -52,9 +61,9 @@
     box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
     position: absolute;
     top: 19px; left: -21px;
-  }
+}
 
-  .ribbon span::before {
+.ribbon span::before {
     content: "";
     position: absolute; left: 0px; top: 100%;
     z-index: -1;
@@ -62,9 +71,9 @@
     border-right: 3px solid transparent;
     border-bottom: 3px solid transparent;
     border-top: 3px solid var(--p-orange);
-  }
+}
 
-  .ribbon span::after {
+.ribbon span::after {
     content: "";
     position: absolute; right: 0px; top: 100%;
     z-index: -1;
@@ -72,4 +81,11 @@
     border-right: 3px solid var(--p-orange);
     border-bottom: 3px solid transparent;
     border-top: 3px solid var(--p-orange);
-  }
+}
+
+/*** Media Queries ***/
+@media screen and (min-width: 992px) {
+    .recent-docs-row {
+        margin-right: 0;
+    }
+}

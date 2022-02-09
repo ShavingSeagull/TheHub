@@ -27,7 +27,15 @@ def test_api_request(request):
 
     drive = build('drive', 'v3', credentials=credentials)
 
-    files = drive.files().list().execute()
+    # TODO: Tie this in with the document_list function below.
+    # May need some further refining, but this appears to pull
+    # through all the Docs in my Drive at work - check Sheets too
+    files = drive.files().list(
+        q="mimeType='application/vnd.google-apps.document' and trashed = false and sharedWithMe = true", 
+        corpora="user"
+        # includeItemsFromAllDrives=True,
+        # supportsAllDrives=True
+    ).execute()
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
@@ -55,6 +63,7 @@ def authorize(request):
     # configured in the API Console. If this value doesn't match an authorized URI,
     # you will get a 'redirect_uri_mismatch' error.
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
+    print(f"ABSOLUTE PATH OAUTH2CALLBACK: {request.build_absolute_uri(reverse('oauth2callback'))}")
 
     # Generate URL for request to Google's OAuth 2.0 server.
     # Use kwargs to set optional request parameters.
@@ -100,74 +109,6 @@ def oauth2Callback(request):
     
     return redirect('test_api_request')
 
-
-def testerView(request):
-
-    # CREDS = Credentials.from_service_account_file('creds.json')
-    # SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'oauth_creds.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
-
-    try:
-        service = build('drive', 'v3', credentials=creds)
-
-        # Call the Drive v3 API
-        results = service.files().list(
-            pageSize=10, fields="nextPageToken, files(id, name)").execute()
-        items = results.get('files', [])
-
-        if not items:
-            print('No files found.')
-            return
-        print('Files:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['name'], item['id']))
-    except HttpError as error:
-        # TODO(developer) - Handle errors from drive API.
-        print(f'An error occurred: {error}')
-
-    return HttpResponse('<p>Done</p>')
-
-def tester_anna(request):
-    CREDS = Credentials.from_service_account_file('creds.json')
-    SCOPED_CREDS = CREDS.with_scopes(SCOPES)
-
-    try:
-        service = build('drive', 'v3', credentials=CREDS)
-
-        # Call the Drive v3 API
-        results = service.files().list(
-            pageSize=10, fields="nextPageToken, files(id, name)").execute()
-        items = results.get('files', [])
-
-        if not items:
-            print('No files found.')
-            return
-        print('Files:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['name'], item['id']))
-    except HttpError as error:
-        # TODO(developer) - Handle errors from drive API.
-        print(f'An error occurred: {error}')
-    
-    return HttpResponse("<p>Done</p>")
-
 def document_list(request):
     """
     Display the main overview of documents,
@@ -176,4 +117,10 @@ def document_list(request):
     also displays the categories and tags to
     filter by, as well as a Search bar.
     """
+
+    # TODO: Pull through the list of docs from the Drive API
+    # and display them in the template, replacing the hard-coded
+    # dummy examples.
+
+
     return render(request, "documents/document_list.html")

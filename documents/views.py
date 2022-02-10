@@ -33,6 +33,7 @@ def drive_api_request(request, query: str, ordering: str, page_size: int):
     files = drive.files().list(
         q=query,
         corpora="user",
+        fields="*",
         orderBy=ordering,
         pageSize=page_size
         # includeItemsFromAllDrives=True,

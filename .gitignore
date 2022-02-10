@@ -1,6 +1,7 @@
 env.py
 creds.json
 oauth_creds.json
+test.*
 *.sqlite3
 __pycache__
 *.pyc

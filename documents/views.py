@@ -17,7 +17,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-def test_api_request(request, query: str, ordering: str, page_size: int):
+def drive_api_request(request, query: str, ordering: str, page_size: int):
     if 'credentials' not in request.session:
         return redirect('authorize')
 
@@ -50,7 +50,6 @@ def test_api_request(request, query: str, ordering: str, page_size: int):
         'client_secret': credentials.client_secret,
         'scopes': credentials.scopes}
 
-    # return HttpResponse(json.dumps(files))
     return json.dumps(files)
 
 def authorize(request):
@@ -110,7 +109,7 @@ def oauth2Callback(request):
         'client_secret': credentials.client_secret,
         'scopes': credentials.scopes}
     
-    return redirect('test_api_request')
+    return redirect('document_list')
 
 def document_list(request):
     """
@@ -126,7 +125,7 @@ def document_list(request):
     # dummy examples.
 
     q=f"mimeType='application/vnd.google-apps.document' and trashed = false and sharedWithMe = true"
-    data = test_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
+    data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
     files = json.loads(data)
 
     context = {

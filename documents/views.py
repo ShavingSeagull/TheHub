@@ -17,7 +17,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-def test_api_request(request):
+def test_api_request(request, query: str, ordering: str, page_size: int):
     if 'credentials' not in request.session:
         return redirect('authorize')
 
@@ -31,8 +31,10 @@ def test_api_request(request):
     # May need some further refining, but this appears to pull
     # through all the Docs in my Drive at work - check Sheets too
     files = drive.files().list(
-        q="mimeType='application/vnd.google-apps.document' and trashed = false and sharedWithMe = true", 
-        corpora="user"
+        q=query,
+        corpora="user",
+        orderBy=ordering,
+        pageSize=page_size
         # includeItemsFromAllDrives=True,
         # supportsAllDrives=True
     ).execute()
@@ -48,7 +50,8 @@ def test_api_request(request):
         'client_secret': credentials.client_secret,
         'scopes': credentials.scopes}
 
-    return HttpResponse(json.dumps(files))
+    # return HttpResponse(json.dumps(files))
+    return json.dumps(files)
 
 def authorize(request):
     # Use the client_secret.json file to identify the application requesting
@@ -122,5 +125,12 @@ def document_list(request):
     # and display them in the template, replacing the hard-coded
     # dummy examples.
 
+    q=f"mimeType='application/vnd.google-apps.document' and trashed = false and sharedWithMe = true"
+    data = test_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
+    files = json.loads(data)
 
-    return render(request, "documents/document_list.html")
+    context = {
+        "files": files
+    }
+
+    return render(request, "documents/test.html", context=context)

@@ -133,4 +133,4 @@ def document_list(request):
         "files": files
     }
 
-    return render(request, "documents/test.html", context=context)
+    return render(request, "documents/document_list.html", context=context)

@@ -27,33 +27,17 @@
             </div>
             <!-- Recent Docs cards -->
             <div class="row recent-docs-row">
+                {% for file in files.files %}
                 <div class="col-12 col-md-6 col-lg-4 mt-5">
                     <div class="card docs-list-card text-center">
                         <div class="ribbon"><span>Category</span></div>
-                        <img src="https://dummyimage.com/60x60/000/fff" class="doc-list-card-img" alt="Author Display Picture">
-                        <p class="mt-2">Author</p>
-                        <p><strong>Document Title</strong></p>
+                        <img src="{{ file.owners.0.photoLink }}" class="doc-list-card-img rounded-circle" alt="Author Display Picture">
+                        <p class="mt-2">{{ file.owners.0.displayName }}</p>
+                        <p><strong>{{ file.name }}</strong></p>
                         <p><span>Tag</span> <span>Tag</span> <span>Tag</span></p>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4 mt-5">
-                    <div class="card docs-list-card text-center">
-                        <div class="ribbon"><span>Category</span></div>
-                        <img src="https://dummyimage.com/60x60/000/fff" class="doc-list-card-img" alt="Author Display Picture">
-                        <p class="mt-2">Author</p>
-                        <p><strong>Document Title</strong></p>
-                        <p><span>Tag</span> <span>Tag</span> <span>Tag</span></p>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4 mt-5">
-                    <div class="card docs-list-card text-center">
-                        <div class="ribbon"><span>Category</span></div>
-                        <img src="https://dummyimage.com/60x60/000/fff" class="doc-list-card-img" alt="Author Display Picture">
-                        <p class="mt-2">Author</p>
-                        <p><strong>Document Title</strong></p>
-                        <p><span>Tag</span> <span>Tag</span> <span>Tag</span></p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <!-- Relevant For You section -->
             <div class="row mt-4">

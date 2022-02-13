@@ -33,6 +33,14 @@ def drive_api_request(request, query: str, ordering: str, page_size: int):
     files = drive.files().list(
         q=query,
         corpora="user",
+        # For production, will only need these fields:
+        # nextPageToken (perhaps?),
+        # files(
+        # id, name, mimeType, description?, 
+        # viewedByMe, viewedByMeTime, thumbnailLink?, createdTime,
+        # modifiedTime, modifiedByMe, modifiedByMeTime, sharedWithMeTime)
+        #
+        # Will also need files(owners[0][displayName, photoLink]), but unsure of syntax
         fields="*",
         orderBy=ordering,
         pageSize=page_size
@@ -121,16 +129,20 @@ def document_list(request):
     filter by, as well as a Search bar.
     """
 
-    # TODO: Pull through the list of docs from the Drive API
-    # and display them in the template, replacing the hard-coded
-    # dummy examples.
+    # TODO: Update User profile to include a toggle as to whether they
+    # can access live data - only going to be used for uni demo purposes
 
-    q=f"mimeType='application/vnd.google-apps.document' and trashed = false and sharedWithMe = true"
-    data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
-    files = json.loads(data)
+    # TODO: Reduce to a single API request and sort the data by sharedWithMeTime and viewedByMeTime on the backend
+
+    q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
+    recent_docs_data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
+    relevant_docs_data = drive_api_request(request, query=q, ordering="viewedByMeTime desc", page_size=3)
+    recent_files = json.loads(recent_docs_data)
+    relevant_files = json.loads(relevant_docs_data)
 
     context = {
-        "files": files
+        "recent_files": recent_files,
+        "relevant_files": relevant_files
     }
 
     return render(request, "documents/document_list.html", context=context)

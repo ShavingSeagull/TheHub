@@ -20,11 +20,21 @@
 
 .docs-list-card {
     transition: 0.5s;
+    min-height: 150px;
 }
 
 .docs-list-card:hover {
     transform: scale(1.1);
     transition: 0.5s;
+}
+
+.docs-list-card > a, .docs-list-card:focus {
+    color: var(--p-navy);
+    font-size: 14px;
+}
+
+.docs-list-card > a:hover {
+    color: var(--p-orange);
 }
 
 .doc-list-card-img {

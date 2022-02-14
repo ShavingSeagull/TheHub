@@ -120,7 +120,7 @@ def oauth2Callback(request):
     
     return redirect('document_list')
 
-def document_list(request):
+def document_overview(request):
     """
     Display the main overview of documents,
     which will include Recent Docs, as well

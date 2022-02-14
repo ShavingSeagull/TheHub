@@ -1,0 +1,29 @@
+{% extends "documents/document_base.html" %}
+{% load static %}
+{% block title %}Document Results{% endblock %}
+
+{% block doc_content %}
+<div class="row">
+    <a href="{% url 'document_overview' %}" class="btn branded-btn"><i class="fas fa-angle-left"></i> Go Back</a>
+</div>
+<!-- Recent Docs header -->
+<div class="row">
+    <div class="col-12 mt-4 doc-list-header">
+        <h3 class="white-text d-inline-block mb-0">Results</h3>
+    </div>
+</div>
+<!-- Recent Docs cards -->
+<div class="row recent-docs-row">
+    {% for file in recent_files.files %}
+    <div class="col-12 col-md-6 col-lg-4 mt-5">
+        <div class="card docs-list-card text-center">
+            <div class="ribbon"><span>Category</span></div>
+            <img src="{{ file.owners.0.photoLink }}" class="doc-list-card-img rounded-circle" alt="Author Display Picture">
+            <p class="mt-3">{{ file.owners.0.displayName }}</p>
+            <a href="{{ file.webViewLink }}" class="mt-3" target="_blank"><strong>{{ file.name }}</strong></a>
+            <p class="mt-3"><span>Tag</span> <span>Tag</span> <span>Tag</span></p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

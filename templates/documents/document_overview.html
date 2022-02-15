@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-12 mt-4 doc-list-header">
         <h3 class="white-text d-inline-block mb-0">Recent Docs</h3>
-        <a href="#" class="btn btn-sm branded-btn d-inline-block ml-4">See All</a>
+        <a href="{% url 'document_list' %}?results=recent" class="btn btn-sm branded-btn d-inline-block ml-4">See All</a>
     </div>
 </div>
 <!-- Recent Docs cards -->
@@ -35,7 +35,7 @@
 <div class="row mt-4">
     <div class="col-12 mt-4 doc-list-header">
         <h3 class="white-text d-inline-block mb-0">Relevant for You</h3>
-        <a href="#" class="btn btn-sm branded-btn d-inline-block ml-4">See All</a>
+        <a href="{% url 'document_list' %}?results=relevant" class="btn btn-sm branded-btn d-inline-block ml-4">See All</a>
     </div>
 </div>
 <!-- Relevant For You cards -->

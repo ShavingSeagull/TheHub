@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
 import os
 import os.path
 import json
@@ -17,9 +18,10 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
+@login_required
 def drive_api_request(request, query: str, ordering: str, page_size: int):
-    if 'credentials' not in request.session:
-        return redirect('authorize')
+    # if 'credentials' not in request.session:
+    #     return redirect('authorize')
 
     # Load credentials from the session.
     credentials = google.oauth2.credentials.Credentials(
@@ -61,6 +63,7 @@ def drive_api_request(request, query: str, ordering: str, page_size: int):
 
     return json.dumps(files)
 
+@login_required
 def authorize(request):
     # Use the client_secret.json file to identify the application requesting
     # authorization. The client ID (from that file) and access scopes are required.
@@ -74,7 +77,6 @@ def authorize(request):
     # configured in the API Console. If this value doesn't match an authorized URI,
     # you will get a 'redirect_uri_mismatch' error.
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
-    print(f"ABSOLUTE PATH OAUTH2CALLBACK: {request.build_absolute_uri(reverse('oauth2callback'))}")
 
     # Generate URL for request to Google's OAuth 2.0 server.
     # Use kwargs to set optional request parameters.
@@ -118,12 +120,13 @@ def oauth2Callback(request):
         'client_secret': credentials.client_secret,
         'scopes': credentials.scopes}
     
-    return redirect('document_list')
+    return redirect('document_overview')
 
+@login_required
 def document_overview(request):
     """
     Display the main overview of documents,
-    which will include Recent Docs, as well
+    which will include recent docs, as well
     as ones relevant for the user. The page
     also displays the categories and tags to
     filter by, as well as a Search bar.
@@ -133,6 +136,9 @@ def document_overview(request):
     # can access live data - only going to be used for uni demo purposes
 
     # TODO: Reduce to a single API request and sort the data by sharedWithMeTime and viewedByMeTime on the backend
+
+    if 'credentials' not in request.session:
+        return redirect('authorize')
 
     q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
     recent_docs_data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
@@ -146,3 +152,33 @@ def document_overview(request):
     }
 
     return render(request, "documents/document_overview.html", context=context)
+
+@login_required
+def document_list(request):
+    """
+    Displays the results of either the filtering options,
+    the document search bar or by clicking the 'See All'
+    button on the document_overview page.
+    """
+    if 'credentials' not in request.session:
+        return redirect('authorize')
+
+    results = request.GET.get('results')
+
+    q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
+    
+    if results == 'recent':
+        docs_data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=1000)
+    elif results == 'relevant':
+        docs_data = drive_api_request(request, query=q, ordering="viewedByMeTime desc", page_size=1000)
+
+    all_files = json.loads(docs_data)
+
+    context = {
+        'all_files': all_files
+    }
+
+    return render(request, "documents/document_list.html", context=context)
+
+# TODO: Continue researching how to create a document within the app.
+# This will relate to filtering by tags and categories.

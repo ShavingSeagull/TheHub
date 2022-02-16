@@ -99,3 +99,13 @@
         margin-right: 0;
     }
 }
+
+@media screen and (max-width: 576px){
+    .page-header {
+        font-size: 1.6rem;
+    }
+
+    .page-subheader {
+        font-size: 1.1rem;
+    }
+}

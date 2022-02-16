@@ -204,4 +204,10 @@ def create_document(request):
     This allows for the addition of custom metadata (tags
     and a category).
     """
-    pass
+    doc_type = request.GET.get('doctype')
+
+    context = {
+        'doc_type': f"Google {doc_type}"
+    }
+
+    return render(request, "documents/create_document.html", context=context)

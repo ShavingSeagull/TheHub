@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create a Document{% endblock %}
+
+{% block injected_css %}
+<link rel="stylesheet" href="{% static 'css/documents.css' %}">
+{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">{{ doc_type }} Creation</h1>
+        </div>
+    </div>
+    <!-- Django form errors -->
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.name }}: {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- ./Django form errors -->
+    <form method="POST" action="{% url 'create_document' %}" class="form mt-5">
+        {% csrf_token %}
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Document Details</legend>
+            <div class="alert alert-info">
+                Note: The document will be created blank and these details appended to it. 
+                The newly created document will then open in {{ doc_type }}s for you to enter 
+                the content.
+            </div>
+            <div class="form-group">
+                <label for="doc-title">Title</label>
+                <input name="doc_title" id="doc-title" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="category" name="category" id="category">Category</label>
+                <br>
+                <small class="text-muted">Please enter a single one-word category</small>
+                <input name="category" id="category" type="text" pattern="[A-Za-z]" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                <br>
+                <small class="text-muted">
+                    Enter as many tags as you like, separated by a comma. 
+                    For tags that are multi-word, use camelCase. Eg: tutoring, learningSuccess, sales
+                </small>
+                <input name="tags" id="tags" type="text" class="form-control">
+            </div>
+        </fieldset>
+    </form>
+</section>
+{% endblock %}

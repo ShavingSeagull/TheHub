@@ -182,3 +182,26 @@ def document_list(request):
 
 # TODO: Continue researching how to create a document within the app.
 # This will relate to filtering by tags and categories.
+
+# TODO: NEW PLAN: Keep the option to create a new Doc or Sheet, but then
+# render a page to add a Title and the custom metadata (Tags and Category).
+# The blank doc will then be created programatically and the Create button 
+# will open the newly created Doc/Sheet in Google Docs or Sheets for 
+# completion. No saving of Document data in Django necessary.
+
+@login_required
+def document_creation_selection(request):
+    """
+    Renders the view that allows users to select
+    whether to create a Google Doc or a Sheet
+    """
+    return render(request, "documents/document_creation_selection.html")
+
+@login_required
+def create_document(request):
+    """
+    Allows the user to create a doc from within The Hub.
+    This allows for the addition of custom metadata (tags
+    and a category).
+    """
+    pass

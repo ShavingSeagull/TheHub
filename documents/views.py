@@ -12,6 +12,7 @@ import google_auth_oauthlib.flow
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from .models import Category, Tag
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive.file",
@@ -205,9 +206,13 @@ def create_document(request):
     and a category).
     """
     doc_type = request.GET.get('doctype')
+    categories = Category.objects.all()
+    tags = Tag.objects.all()
 
     context = {
-        'doc_type': f"Google {doc_type}"
+        'doc_type': f"Google {doc_type}",
+        'categories': categories,
+        'tags': tags
     }
 
     return render(request, "documents/create_document.html", context=context)

@@ -41,24 +41,67 @@
             </div>
             <div class="form-group">
                 <label for="doc-title">Title</label>
-                <input name="doc_title" id="doc-title" type="text" class="form-control">
+                <input name="doc_title" id="doc-title" type="text" class="form-control" aria-describedby="titleHelpBlock">
+                <small id="titleHelpBlock" class="form-text text-muted">This will be the document's title on Google Drive</small>
             </div>
             <div class="form-group">
-                <label for="category" name="category" id="category">Category</label>
-                <br>
-                <small class="text-muted">Please enter a single one-word category</small>
-                <input name="category" id="category" type="text" pattern="[A-Za-z]" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="tags">Tags</label>
-                <br>
-                <small class="text-muted">
-                    Enter as many tags as you like, separated by a comma. 
-                    For tags that are multi-word, use camelCase. Eg: tutoring, learningSuccess, sales
+                <label for="category">Category</label>
+                <select name="categories" id="categories" class="custom-select" aria-describedby="categoryHelpBlock">
+                    <option value="" selected disabled>Select:</option>
+                    {% for category in categories %}
+                        <option value="{{ category.name }}">{{ category.friendly_name }}</option>
+                    {% endfor %}
+                </select>
+                <small id="categoryHelpBlock" class="form-text text-muted">
+                    Please select the most relevant category.
+                    {% if request.user.is_staff %}
+                    Admin users are able to add and edit categories from the <a href="{% url 'admin_area' %}">Admin Area</a>.
+                    {% endif %}
                 </small>
-                <input name="tags" id="tags" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <h4>Tags</h4>
+                <button type="button" class="btn branded-btn my-3" id="all-tags-btn">View tags</button>
+                <div id="all-tags-container">
+                    {% for tag in tags %}
+                    <label for="tag_{{ tag.name }}" class="pl-2 pr-3">
+                        <input type="checkbox" id="tag_{{ tag.name }}" name="tags" value="{{ tag.name }}" class="mr-1">
+                        {{ tag.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+                <div class="mt-2">
+                    <label for="tags">Extra tags</label>
+                    <input name="tags" id="tags" type="text" class="form-control" aria-describedby="tagsHelpBlock">
+                    <small id="tagsHelpBlock" class="form-text text-muted">
+                        Enter as many tags as you like, separated by a comma. 
+                        For tags that are multi-word, use camelCase. Eg: tutoring, learningSuccess, sales
+                    </small>
+                </div>
             </div>
         </fieldset>
+        <hr>
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Sharing Permissions</legend>
+            <div class="alert alert-info">
+                Note: This will share the document in its blank state. If you would 
+                prefer to share the document when it is complete, leave this field blank and share it 
+                as normal via the Share button on the document itself.
+            </div>
+            <div class="form-group">
+                <label for="shared-users">Users' emails</label>
+                <input name="shared_users" id="shared-users" type="text" class="form-control" aria-describedby="sharedUsersHelpBlock">
+                <small id="sharedUsersHelpBlock" class="form-text text-muted">
+                    Enter the emails of the people you wish to share the document with. For multiple people, separate 
+                    the email addresses by comma. Eg: john.smith@codeinstitute.net, jane.smith@codeinstitute.net
+                </small>
+            </div>
+        </fieldset>
+        <input type="submit" class="btn branded-btn" value="Create document" />
     </form>
 </section>
+{% endblock %}
+
+{% block injected_js %}
+<script src="{% static 'js/documents.js' %}"></script>
 {% endblock %}

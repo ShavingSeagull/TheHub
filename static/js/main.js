@@ -32,6 +32,20 @@ function animateHeaders() {
     }
 }
 
+/**
+ * The toggle switch is a styled label via CSS. Therefore, the actual <input> checkbox
+ * isn't able to be checked via mouse click. This click listener sets the state of the
+ * <input> itself, so that the backend can retrieve it accurately.
+ * @param {node} elem 
+ */
+ function switchToggle(elem) {
+    if ($(elem).attr('checked')) {
+        $(elem).attr('checked', false);
+    } else {
+        $(elem).attr('checked', true);
+    }
+}
+
 // Calls the animation function only when the page is ready
 $(document).ready(function(){
     animateHeaders();
@@ -52,4 +66,9 @@ $('.selection-card').hover(function(){
 }, function(){
     $(this).removeClass('card-pulse');
     $(this).children('a').children('p').css('color', '#4a4a4f');
+});
+
+// Click listener to fire the switch toggler
+$('.slider-input').click(function(){
+    switchToggle(this)
 });

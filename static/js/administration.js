@@ -1,24 +1,5 @@
 /* jshint esversion: 6 */
 $(document).ready(function(){
-    /**
-     * The toggle switch is a styled label via CSS. Therefore, the actual <input> checkbox
-     * isn't able to be checked via mouse click. This click listener sets the state of the
-     * <input> itself, so that the backend can retrieve it accurately.
-     * @param {node} elem 
-     */
-    function switchToggle(elem) {
-        if ($(elem).attr('checked')) {
-            $(elem).attr('checked', false);
-        } else {
-            $(elem).attr('checked', true);
-        }
-    }
-
-    // Click listener to fire the switch toggler
-    $('.slider-input').click(function(){
-        switchToggle(this)
-    });
-
     /* 
     * Click listener to handle the user dropdown. When a user is selected,
     * a call is made to the API on the backend to retrieve the corresponding

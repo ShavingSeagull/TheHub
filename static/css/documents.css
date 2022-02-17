@@ -93,6 +93,14 @@
     border-top: 3px solid var(--p-orange);
 }
 
+#all-tags-container {
+    display: none;
+}
+
+#all-tags-container input[name='tags'] {
+    transform: scale(1.4);
+}
+
 /*** Media Queries ***/
 @media screen and (min-width: 992px) {
     .recent-docs-row {

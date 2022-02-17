@@ -70,5 +70,5 @@ $('.selection-card').hover(function(){
 
 // Click listener to fire the switch toggler
 $('.slider-input').click(function(){
-    switchToggle(this)
+    switchToggle(this);
 });

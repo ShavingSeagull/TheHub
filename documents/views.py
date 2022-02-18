@@ -13,6 +13,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from .models import Category, Tag
+from .helpers import *
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive.file",
@@ -63,6 +64,30 @@ def drive_api_request(request, query: str, ordering: str, page_size: int):
         'scopes': credentials.scopes}
 
     return json.dumps(files)
+
+@login_required
+def drive_file_upload(request, title: str, doc_type: str, tags='', category=''):
+    """
+    Allows a user to upload a new blank file (with title)
+    to their Drive account. Includes custom metadata that
+    doesn't ship with Google Docs and Sheets as standard,
+    such as tags and a category.
+    """
+    if doc_type == 'Doc':
+        file_ext = 'txt'
+        mime_type = 'application/vnd.google-apps.document'
+    elif doc_type == 'Sheet':
+        file_ext = 'csv'
+        mime_type = 'application/vnd.google-apps.spreadsheet'
+
+    file_metadata = {
+        "name": f"{title}.{file_ext}",
+        "mimeType": mime_type,
+        "appProperties": {
+            "tags": tags,
+            "category": category
+        }
+    }
 
 @login_required
 def authorize(request):
@@ -208,6 +233,22 @@ def create_document(request):
     doc_type = request.GET.get('doctype')
     categories = Category.objects.all()
     tags = Tag.objects.all()
+
+    if request.method == 'POST':
+        doc_title = request.POST.get('doc_title')
+        tag_list = request.POST.getlist('tags')
+        extra_tags = request.POST.get('extra_tags')
+        category = request.POST.get('categories')
+
+        split_tags = tag_list_formatter(extra_tags)
+        
+        if 'credentials' not in request.session:
+            return redirect('authorize')
+            
+        drive_file_upload(
+            request, title=doc_title, 
+            doc_type=doc_type, tags=tag_list, category=category
+        )
 
     context = {
         'doc_type': f"Google {doc_type}",

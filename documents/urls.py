@@ -8,5 +8,5 @@ urlpatterns = [
     path('create-document', views.create_document, name="create_document"),
     path('authorize', views.authorize, name="authorize"),
     path('oauth2callback', views.oauth2Callback, name="oauth2callback"),
-    path('drive_api_request', views.drive_api_request, name="drive_api_request"),
+    path('drive-api-build', views.google_drive_service_build, name="drive_api_build"),
 ]

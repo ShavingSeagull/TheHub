@@ -21,15 +21,30 @@ SCOPES = [
 ]
 
 @login_required
-def drive_api_request(request, query: str, ordering: str, page_size: int):
-    # if 'credentials' not in request.session:
-    #     return redirect('authorize')
-
-    # Load credentials from the session.
+def google_drive_service_build(request):
+    """
+    Builds the connection to v3 of the Google Drive API
+    and returns the built service object.
+    """
     credentials = google.oauth2.credentials.Credentials(
         **request.session['credentials'])
+    
+    request.session['credentials'] = {
+        'token': credentials.token,
+        'refresh_token': credentials.refresh_token,
+        'token_uri': credentials.token_uri,
+        'client_id': credentials.client_id,
+        'client_secret': credentials.client_secret,
+        'scopes': credentials.scopes}
 
-    drive = build('drive', 'v3', credentials=credentials)
+    return build('drive', 'v3', credentials=credentials)
+
+@login_required
+def drive_api_search(request, query: str, ordering: str, page_size: int):
+    """
+    The API call that handles file searching.
+    """
+    drive = google_drive_service_build(request)
 
     # TODO: Tie this in with the document_list function below.
     # May need some further refining, but this appears to pull
@@ -45,28 +60,19 @@ def drive_api_request(request, query: str, ordering: str, page_size: int):
         # modifiedTime, modifiedByMe, modifiedByMeTime, sharedWithMeTime)
         #
         # Will also need files(owners[0][displayName, photoLink]), but unsure of syntax
-        fields="*",
+        fields="files(id, name, mimeType, description, properties, appProperties)",
         orderBy=ordering,
         pageSize=page_size
         # includeItemsFromAllDrives=True,
         # supportsAllDrives=True
     ).execute()
 
-    # Save credentials back to session in case access token was refreshed.
-    # ACTION ITEM: In a production app, you likely want to save these
-    #              credentials in a persistent database instead.
-    request.session['credentials'] = {
-        'token': credentials.token,
-        'refresh_token': credentials.refresh_token,
-        'token_uri': credentials.token_uri,
-        'client_id': credentials.client_id,
-        'client_secret': credentials.client_secret,
-        'scopes': credentials.scopes}
+    print(f"FILE METADATA: {files}")
 
     return json.dumps(files)
 
 @login_required
-def drive_file_upload(request, title: str, doc_type: str, tags='', category=''):
+def drive_api_file_upload(request, title: str, doc_type: str, tags=[], category=''):
     """
     Allows a user to upload a new blank file (with title)
     to their Drive account. Includes custom metadata that
@@ -74,20 +80,25 @@ def drive_file_upload(request, title: str, doc_type: str, tags='', category=''):
     such as tags and a category.
     """
     if doc_type == 'Doc':
-        file_ext = 'txt'
         mime_type = 'application/vnd.google-apps.document'
     elif doc_type == 'Sheet':
-        file_ext = 'csv'
         mime_type = 'application/vnd.google-apps.spreadsheet'
 
+    print(f"TAGS: {tags} / TYPE: {type(tags)}")
+
     file_metadata = {
-        "name": f"{title}.{file_ext}",
+        "name": f"{title}",
         "mimeType": mime_type,
         "appProperties": {
             "tags": tags,
             "category": category
         }
     }
+
+    drive = google_drive_service_build(request)
+    new_file = drive.files().create(body=file_metadata).execute()
+
+    return new_file
 
 @login_required
 def authorize(request):
@@ -167,8 +178,8 @@ def document_overview(request):
         return redirect('authorize')
 
     q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
-    recent_docs_data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
-    relevant_docs_data = drive_api_request(request, query=q, ordering="viewedByMeTime desc", page_size=3)
+    recent_docs_data = drive_api_search(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
+    relevant_docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=3)
     recent_files = json.loads(recent_docs_data)
     relevant_files = json.loads(relevant_docs_data)
 
@@ -193,10 +204,13 @@ def document_list(request):
 
     q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
     
+    #TODO: Files that have been moved to the trash but not permanently deleted are still appearing
+    # in the results. Need to alter this. Trashed files will auto-delete after 30 days.
+
     if results == 'recent':
-        docs_data = drive_api_request(request, query=q, ordering="sharedWithMeTime desc", page_size=1000)
+        docs_data = drive_api_search(request, query=q, ordering="sharedWithMeTime desc", page_size=1000)
     elif results == 'relevant':
-        docs_data = drive_api_request(request, query=q, ordering="viewedByMeTime desc", page_size=1000)
+        docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=1000)
 
     all_files = json.loads(docs_data)
 
@@ -235,22 +249,28 @@ def create_document(request):
     tags = Tag.objects.all()
 
     if request.method == 'POST':
+        post_doc_type = request.POST.get('doc_type')
         doc_title = request.POST.get('doc_title')
         tag_list = request.POST.getlist('tags')
         extra_tags = request.POST.get('extra_tags')
         category = request.POST.get('categories')
 
-        split_tags = tag_list_formatter(extra_tags)
+        tag_list.extend(tag_list_formatter(extra_tags))
+
+        #TODO: Lists can't be stored as custom metadata.
+        # Need to retrieve the tag list and use join(', ')
+        # to convert them all into one long string.
         
         if 'credentials' not in request.session:
             return redirect('authorize')
             
-        drive_file_upload(
+        new_file = drive_api_file_upload(
             request, title=doc_title, 
-            doc_type=doc_type, tags=tag_list, category=category
+            doc_type=post_doc_type, tags=tag_list, category=category
         )
 
     context = {
+        'doc_type_raw': doc_type,
         'doc_type': f"Google {doc_type}",
         'categories': categories,
         'tags': tags

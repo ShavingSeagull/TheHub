@@ -60,7 +60,7 @@ def drive_api_search(request, query: str, ordering: str, page_size: int):
         # modifiedTime, modifiedByMe, modifiedByMeTime, sharedWithMeTime)
         #
         # Will also need files(owners[0][displayName, photoLink]), but unsure of syntax
-        fields="files(id, name, mimeType, description, properties, appProperties)",
+        fields="files(id, name, mimeType, description, properties, appProperties, owners)",
         orderBy=ordering,
         pageSize=page_size
         # includeItemsFromAllDrives=True,
@@ -169,15 +169,14 @@ def document_overview(request):
     filter by, as well as a Search bar.
     """
 
-    # TODO: Update User profile to include a toggle as to whether they
-    # can access live data - only going to be used for uni demo purposes
-
     # TODO: Reduce to a single API request and sort the data by sharedWithMeTime and viewedByMeTime on the backend
 
     if 'credentials' not in request.session:
         return redirect('authorize')
 
-    q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
+    # Query needs to check for whether the document was shared with the user or whether the user owns it themselves.
+    # This is due to docs that are owned directly not having a truthy shared status (as you can't share a doc with yourself).
+    q=f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
     recent_docs_data = drive_api_search(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
     relevant_docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=3)
     recent_files = json.loads(recent_docs_data)
@@ -201,11 +200,7 @@ def document_list(request):
         return redirect('authorize')
 
     results = request.GET.get('results')
-
-    q=f"mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and sharedWithMe = true" # noqa: E501
-    
-    #TODO: Files that have been moved to the trash but not permanently deleted are still appearing
-    # in the results. Need to alter this. Trashed files will auto-delete after 30 days.
+    q=f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
 
     if results == 'recent':
         docs_data = drive_api_search(request, query=q, ordering="sharedWithMeTime desc", page_size=1000)
@@ -219,15 +214,6 @@ def document_list(request):
     }
 
     return render(request, "documents/document_list.html", context=context)
-
-# TODO: Continue researching how to create a document within the app.
-# This will relate to filtering by tags and categories.
-
-# TODO: NEW PLAN: Keep the option to create a new Doc or Sheet, but then
-# render a page to add a Title and the custom metadata (Tags and Category).
-# The blank doc will then be created programatically and the Create button 
-# will open the newly created Doc/Sheet in Google Docs or Sheets for 
-# completion. No saving of Document data in Django necessary.
 
 @login_required
 def document_creation_selection(request):

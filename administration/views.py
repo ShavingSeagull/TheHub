@@ -116,24 +116,24 @@ def edit_user(request):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
 
-            associated_username = User.objects.filter(Q(username=username))
-            associated_email = User.objects.filter(Q(email=email))
+            user = User.objects.filter(Q(username=username))
 
-            if not associated_username.exists():
+            # This defensive measure should never really fire, as the entire user 
+            # list is retrieved and then passed to the template in the GET; the specific 
+            # user in question is then pulled back from the template in the POST
+            if not user.exists():
                 messages.error(request, "The user doesn't exist.")
-            elif not associated_email.exists():
-                messages.error(request, "The email address isn't associated with anyone.")
-            else:
-                associated_username.update(
-                    email=email, 
-                    first_name=first_name, 
-                    last_name=last_name, 
-                    is_superuser=is_superuser, 
-                    is_active=is_active
-                )
+            
+            user.update(
+                email=email, 
+                first_name=first_name, 
+                last_name=last_name, 
+                is_superuser=is_superuser, 
+                is_active=is_active
+            )
 
-                messages.success(request, "The user was updated successfully.")
-                return redirect('admin_area')
+            messages.success(request, "The user was updated successfully.")
+            return redirect('admin_area')
         else:
             messages.error(request, "There was an issue with the form. Please check and try again.")
     else:

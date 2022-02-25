@@ -2,7 +2,7 @@
 # Helper methods for the Documents app
 # ------------------------------------
 
-def tags_formatter(tag_list: list, extra_tags: str) -> str:
+def tag_formatter(tag_list: list, extra_tags: str) -> str:
     """
     Google Drive API only allows strings as custom metadata.
     This takes the list of checkbox tags and the string of extra
@@ -19,3 +19,18 @@ def tags_formatter(tag_list: list, extra_tags: str) -> str:
             formatted_extra_tags += char
     
     return f"{' '.join(tag_list)} {formatted_extra_tags}".strip()
+
+def tag_extractor(files: dict) -> list:
+    """
+    Takes a string of tags from the Google document/sheet
+    metadata and extracts the tags into a list (per doc) for use
+    on the frontend.
+    """
+    tags_per_file = []
+
+    for file in files['files']:
+        if "appProperties" in file:
+            if "tags" in file['appProperties']:
+                tags_per_file.append({'id': file['id'], 'tags': file['appProperties']['tags'].split()})
+    
+    return tags_per_file

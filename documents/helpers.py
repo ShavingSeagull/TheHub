@@ -31,6 +31,15 @@ def tag_extractor(files: dict) -> list:
     for file in files['files']:
         if "appProperties" in file:
             if "tags" in file['appProperties']:
-                tags_per_file.append({'id': file['id'], 'tags': file['appProperties']['tags'].split()})
+                tags = file['appProperties']['tags']
+                # Only splits up to three tags, as the frontend shouldn't display more than three
+                tags_per_file.append({'id': file['id'], 'tags': tags.split(' ', 3)})
+                if len(tags_per_file[-1]['tags']) > 3:
+                    # While it will only split at three occurrences of a space, it will still
+                    # add the remainder of the tags string to the new list. This will always
+                    # be the final item of the list and thus can be removed safely with the
+                    # -1 index. The list will never be longer than three items long.
+                    last_appended_tags_list = tags_per_file[-1]['tags']
+                    last_appended_tags_list.remove(last_appended_tags_list[-1])
     
     return tags_per_file

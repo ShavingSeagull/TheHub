@@ -72,7 +72,7 @@ def drive_api_search(request, query: str, ordering: str, page_size: int):
     return json.dumps(files)
 
 @login_required
-def drive_api_file_upload(request, title: str, doc_type: str, tags=[], category=''):
+def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=''):
     """
     Allows a user to upload a new blank file (with title)
     to their Drive account. Includes custom metadata that
@@ -241,7 +241,9 @@ def create_document(request):
         extra_tags = request.POST.get('extra_tags')
         category = request.POST.get('categories')
 
-        tag_list.extend(tag_list_formatter(extra_tags))
+        complete_tags = tags_formatter(tag_list, extra_tags)
+
+        # tag_list.extend(tag_list_formatter(extra_tags))
 
         #TODO: Lists can't be stored as custom metadata.
         # Need to retrieve the tag list and use join(', ')
@@ -252,7 +254,7 @@ def create_document(request):
             
         new_file = drive_api_file_upload(
             request, title=doc_title, 
-            doc_type=post_doc_type, tags=tag_list, category=category
+            doc_type=post_doc_type, tags=complete_tags, category=category
         )
 
     context = {

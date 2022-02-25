@@ -182,9 +182,12 @@ def document_overview(request):
     recent_files = json.loads(recent_docs_data)
     relevant_files = json.loads(relevant_docs_data)
 
+    relevant_files_tags = tag_extractor(relevant_files)
+
     context = {
         "recent_files": recent_files,
-        "relevant_files": relevant_files
+        "relevant_files": relevant_files,
+        "relevant_files_tags": relevant_files_tags
     }
 
     return render(request, "documents/document_overview.html", context=context)
@@ -241,7 +244,7 @@ def create_document(request):
         extra_tags = request.POST.get('extra_tags')
         category = request.POST.get('categories')
 
-        complete_tags = tags_formatter(tag_list, extra_tags)
+        complete_tags = tag_formatter(tag_list, extra_tags)
 
         # tag_list.extend(tag_list_formatter(extra_tags))
 

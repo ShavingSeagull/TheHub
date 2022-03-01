@@ -20,12 +20,9 @@
                     <h5>Search by Category</h5>
                 </div>
                 <div class="col-12 p-3">
-                    <button class="btn branded-btn mt-2 mx-auto">Text</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text Longer</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Textsfdsf</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text Long</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text</button>
+                    {% for category in categories %}
+                        <button class="btn branded-btn mt-2 mx-auto">{{ category.friendly_name }}</button>
+                    {% endfor %}
                 </div>
             </article>
             <article class="row card docs-list-sidecard mt-4">
@@ -33,12 +30,9 @@
                     <h5>Search by Tag</h5>
                 </div>
                 <div class="col-12 p-3">
-                    <button class="btn branded-btn mt-2 mx-auto">Text</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text Longer</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Textsfdsf</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text Long</button>
-                    <button class="btn branded-btn mt-2 mx-auto">Text</button>
+                    {% for tag in tags %}
+                        <button class="btn branded-btn mt-2 mx-auto">{{ tag.name }}</button>
+                    {% endfor %}
                 </div>
             </article>
             <article class="row card docs-list-sidecard mt-4">

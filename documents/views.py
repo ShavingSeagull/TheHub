@@ -185,12 +185,14 @@ def document_overview(request):
     relevant_files_tags = tag_extractor(relevant_files)
 
     categories = Category.objects.all()
+    tags = Tag.objects.all()
 
     context = {
         "recent_files": recent_files,
         "relevant_files": relevant_files,
         "relevant_files_tags": relevant_files_tags,
-        "categories": categories
+        "categories": categories,
+        "tags": tags
     }
 
     return render(request, "documents/document_overview.html", context=context)
@@ -215,10 +217,12 @@ def document_list(request):
 
     all_files = json.loads(docs_data)
     categories = Category.objects.all()
+    tags = Tag.objects.all()
 
     context = {
         'all_files': all_files,
-        'categories': categories
+        'categories': categories,
+        'tags': tags
     }
 
     return render(request, "documents/document_list.html", context=context)
@@ -250,8 +254,6 @@ def create_document(request):
         category = request.POST.get('categories')
 
         complete_tags = tag_formatter(tag_list, extra_tags)
-
-        # tag_list.extend(tag_list_formatter(extra_tags))
 
         #TODO: Lists can't be stored as custom metadata.
         # Need to retrieve the tag list and use join(', ')

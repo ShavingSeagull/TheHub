@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.document_overview, name="document_overview"),
     path('results', views.document_list, name="document_list"),
+    path('search', views.document_search_and_filter, name="document_search_filter"),
     path('creation-area', views.document_creation_selection, name="doc_creation_area"),
     path('create-document', views.create_document, name="create_document"),
     path('authorize', views.authorize, name="authorize"),

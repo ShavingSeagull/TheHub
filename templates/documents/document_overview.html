@@ -22,7 +22,11 @@
     {% for file in recent_files.files %}
     <div class="col-12 col-md-6 col-lg-4 mt-5">
         <div class="card docs-list-card text-center">
-            <div class="ribbon"><span>Category</span></div>
+            {% if file.appProperties.category %}
+                {% for category in categories %}
+                    <div class="ribbon"><span>{% if category.name == file.appProperties.category %}{{ category.friendly_name }}{% endif %}</span></div>
+                {% endfor %}
+            {% endif %}
             <img src="{{ file.owners.0.photoLink }}" class="doc-list-card-img rounded-circle" alt="Author Display Picture">
             <p class="mt-3">{{ file.owners.0.displayName }}</p>
             <a href="{{ file.webViewLink }}" class="mt-3" target="_blank"><strong>{{ file.name }}</strong></a>
@@ -43,7 +47,11 @@
     {% for file in relevant_files.files %}
     <div class="col-12 col-md-6 col-lg-4 mt-5 align-items-stretch">
         <div class="card docs-list-card text-center">
-            <div class="ribbon"><span>Category</span></div>
+            {% if file.appProperties.category %}
+                {% for category in categories %}
+                    <div class="ribbon"><span>{% if category.name == file.appProperties.category %}{{ category.friendly_name }}{% endif %}</span></div>
+                {% endfor %}
+            {% endif %}
             <img src="{{ file.owners.0.photoLink }}" class="doc-list-card-img rounded-circle" alt="Author Display Picture">
             <p class="mt-3">{{ file.owners.0.displayName }}</p>
             <a href="{{ file.webViewLink }}" class="mt-3" target="_blank"><strong>{{ file.name }}</strong></a>

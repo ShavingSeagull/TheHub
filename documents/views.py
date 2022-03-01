@@ -60,14 +60,14 @@ def drive_api_search(request, query: str, ordering: str, page_size: int):
         # modifiedTime, modifiedByMe, modifiedByMeTime, sharedWithMeTime)
         #
         # Will also need files(owners[0][displayName, photoLink]), but unsure of syntax
-        fields="files(id, name, mimeType, description, properties, appProperties, owners)",
+        fields="files(id, name, mimeType, description, properties, appProperties, owners, webViewLink)",
         orderBy=ordering,
         pageSize=page_size
         # includeItemsFromAllDrives=True,
         # supportsAllDrives=True
     ).execute()
 
-    print(f"FILE METADATA: {files}")
+    # print(f"FILE METADATA: {files}")
 
     return json.dumps(files)
 
@@ -83,8 +83,6 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
         mime_type = 'application/vnd.google-apps.document'
     elif doc_type == 'Sheet':
         mime_type = 'application/vnd.google-apps.spreadsheet'
-
-    print(f"TAGS: {tags} / TYPE: {type(tags)}")
 
     file_metadata = {
         "name": f"{title}",
@@ -182,6 +180,7 @@ def document_overview(request):
     recent_files = json.loads(recent_docs_data)
     relevant_files = json.loads(relevant_docs_data)
 
+    # TODO: Pass the recent file tags through as well
     relevant_files_tags = tag_extractor(relevant_files)
 
     categories = Category.objects.all()
@@ -216,13 +215,61 @@ def document_list(request):
         docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=1000)
 
     all_files = json.loads(docs_data)
+    file_tags = tag_extractor(all_files)
     categories = Category.objects.all()
     tags = Tag.objects.all()
 
     context = {
         'all_files': all_files,
         'categories': categories,
-        'tags': tags
+        'tags': tags,
+        'file_tags': file_tags
+    }
+
+    return render(request, "documents/document_list.html", context=context)
+
+@login_required
+def document_search_and_filter(request):
+    """
+    Handles the search bar at the top of the Document Overview page,
+    as well as the filtering options on the sidebar of the
+    document_base template. POST requests will be fired by the
+    search bar; GET requests will be fired by the filters
+    """
+    categories = Category.objects.all()
+    tags = Tag.objects.all()
+    tag_filter = False
+
+    if request.method == "GET":
+        if request.GET.get("category"):
+            query = f"trashed = false and appProperties has {{key='category' and value='{request.GET.get('category')}'}} and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
+        elif request.GET.get("tag"):
+            tag = request.GET.get('tag')
+            query = f"trashed = false and appProperties has {{key='tags' and value contains '{tag}'}} and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
+            tag_filter = True
+
+    elif request.method == "POST":
+        search_term = request.POST.get('q')
+        # Fire the API call here
+
+    files = drive_api_search(request, query, "sharedWithMeTime desc", 1000)
+    all_files = json.loads(files)
+    print(f"ALL FILES: {all_files}")
+    file_tags = tag_extractor(all_files)
+    all_tags = tag_extractor(all_files, for_frontend=False)
+    
+    if tag_filter:
+        for file in all_files['files']:
+            for idx in all_tags:
+                if file['id'] == idx['id'] and not request.GET.get('tag') in idx['tags']:
+                    all_files['files'].remove(file)
+        print(f"NEW FILES: {all_files}")
+    
+    context = {
+        'categories': categories,
+        'tags': tags,
+        'file_tags': file_tags,
+        'all_files': all_files
     }
 
     return render(request, "documents/document_list.html", context=context)

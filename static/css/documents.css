@@ -56,7 +56,7 @@
   }
 
 .ribbon span {
-    font-size: 10px;
+    font-size: .4rem;
     font-weight: bold;
     color: #FFF;
     text-transform: uppercase;
@@ -67,7 +67,6 @@
     width: 100px;
     display: block;
     background: var(--p-orange);
-    /* background: linear-gradient(#E84610 0%, #e84610 100%); */
     box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
     position: absolute;
     top: 19px; left: -21px;

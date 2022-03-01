@@ -184,10 +184,13 @@ def document_overview(request):
 
     relevant_files_tags = tag_extractor(relevant_files)
 
+    categories = Category.objects.all()
+
     context = {
         "recent_files": recent_files,
         "relevant_files": relevant_files,
-        "relevant_files_tags": relevant_files_tags
+        "relevant_files_tags": relevant_files_tags,
+        "categories": categories
     }
 
     return render(request, "documents/document_overview.html", context=context)
@@ -211,9 +214,11 @@ def document_list(request):
         docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=1000)
 
     all_files = json.loads(docs_data)
+    categories = Category.objects.all()
 
     context = {
-        'all_files': all_files
+        'all_files': all_files,
+        'categories': categories
     }
 
     return render(request, "documents/document_list.html", context=context)

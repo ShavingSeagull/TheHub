@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-12 p-3">
                     {% for category in categories %}
-                        <button class="btn branded-btn mt-2 mx-auto">{{ category.friendly_name }}</button>
+                        <a href="{% url 'document_search_filter' %}?category={{ category.name }}" class="btn branded-btn mt-2 mx-auto">{{ category.friendly_name }}</a>
                     {% endfor %}
                 </div>
             </article>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-12 p-3">
                     {% for tag in tags %}
-                        <button class="btn branded-btn mt-2 mx-auto">{{ tag.name }}</button>
+                        <a href="{% url 'document_search_filter' %}?tag={{ tag.name }}" class="btn branded-btn mt-2 mx-auto">{{ tag.name }}</a>
                     {% endfor %}
                 </div>
             </article>

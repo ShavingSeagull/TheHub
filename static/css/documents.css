@@ -101,6 +101,13 @@
 }
 
 /*** Media Queries ***/
+@media screen and (min-width: 1200px) {
+    /* Override the Bootstrap class to allow for a slightly wider container on large screens */
+    .container {
+        max-width: 1350px;
+    }
+}
+
 @media screen and (min-width: 992px) {
     .recent-docs-row {
         margin-right: 0;

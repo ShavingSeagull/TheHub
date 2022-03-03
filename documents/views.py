@@ -244,26 +244,29 @@ def document_search_and_filter(request):
         if request.GET.get("category"):
             query = f"trashed = false and appProperties has {{key='category' and value='{request.GET.get('category')}'}} and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
         elif request.GET.get("tag"):
-            tag = request.GET.get('tag')
-            query = f"trashed = false and appProperties has {{key='tags' and value contains '{tag}'}} and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
+            query = f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
             tag_filter = True
 
     elif request.method == "POST":
         search_term = request.POST.get('q')
         # Fire the API call here
 
-    files = drive_api_search(request, query, "sharedWithMeTime desc", 1000)
+    files = drive_api_search(request, query, "viewedByMeTime desc", 3)
     all_files = json.loads(files)
-    print(f"ALL FILES: {all_files}")
     file_tags = tag_extractor(all_files)
     all_tags = tag_extractor(all_files, for_frontend=False)
-    
-    if tag_filter:
+
+    # Due to Google's ridiculous rules surrounding only storing custom metadata as strings,
+    # there appears to be no way to retrieve only the files that contain the tag requested
+    # by the user. Therefore, all files need to be retrieved and then sorted to filter out
+    # those that don't contain the requested tag.
+    if tag_filter and len(all_tags) > 0:
+        new_files = {'files': []}
         for file in all_files['files']:
-            for idx in all_tags:
-                if file['id'] == idx['id'] and not request.GET.get('tag') in idx['tags']:
-                    all_files['files'].remove(file)
-        print(f"NEW FILES: {all_files}")
+            if 'appProperties' in file:
+                if request.GET.get('tag') in file['appProperties']['tags']:
+                        new_files['files'].append(file)
+        all_files = new_files
     
     context = {
         'categories': categories,

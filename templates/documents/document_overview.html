@@ -6,6 +6,7 @@
 <!-- Document Search Bar -->
 <div class="row">
     <form class="col-12 form-inline mt-4" action="{% url 'document_search_filter' %}" method="POST">
+        {% csrf_token %}
         <input class="form-control w-75" name="q" type="text" placeholder="Document Search" required>
         <button class="btn branded-btn ml-2" type="submit"><i class="fas fa-search"></i></button>
     </form>

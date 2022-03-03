@@ -40,7 +40,7 @@ def google_drive_service_build(request):
     return build('drive', 'v3', credentials=credentials)
 
 @login_required
-def drive_api_search(request, query: str, ordering: str, page_size: int):
+def drive_api_search(request, query: str, page_size: int, ordering: str = None):
     """
     The API call that handles file searching.
     """
@@ -175,8 +175,8 @@ def document_overview(request):
     # Query needs to check for whether the document was shared with the user or whether the user owns it themselves.
     # This is due to docs that are owned directly not having a truthy shared status (as you can't share a doc with yourself).
     q=f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
-    recent_docs_data = drive_api_search(request, query=q, ordering="sharedWithMeTime desc", page_size=3)
-    relevant_docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=3)
+    recent_docs_data = drive_api_search(request, query=q, page_size=3, ordering="sharedWithMeTime desc")
+    relevant_docs_data = drive_api_search(request, query=q, page_size=3, ordering="viewedByMeTime desc")
     recent_files = json.loads(recent_docs_data)
     relevant_files = json.loads(relevant_docs_data)
 
@@ -210,9 +210,9 @@ def document_list(request):
     q=f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
 
     if results == 'recent':
-        docs_data = drive_api_search(request, query=q, ordering="sharedWithMeTime desc", page_size=1000)
+        docs_data = drive_api_search(request, query=q, page_size=1000, ordering="sharedWithMeTime desc")
     elif results == 'relevant':
-        docs_data = drive_api_search(request, query=q, ordering="viewedByMeTime desc", page_size=1000)
+        docs_data = drive_api_search(request, query=q, page_size=1000, ordering="viewedByMeTime desc")
 
     all_files = json.loads(docs_data)
     file_tags = tag_extractor(all_files)
@@ -249,9 +249,9 @@ def document_search_and_filter(request):
 
     elif request.method == "POST":
         search_term = request.POST.get('q')
-        # Fire the API call here
+        query = f"trashed = false and name contains '{search_term}' and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
 
-    files = drive_api_search(request, query, "viewedByMeTime desc", 3)
+    files = drive_api_search(request, query=query, page_size=1000, ordering="createdTime desc")
     all_files = json.loads(files)
     file_tags = tag_extractor(all_files)
     all_tags = tag_extractor(all_files, for_frontend=False)
@@ -265,7 +265,7 @@ def document_search_and_filter(request):
         for file in all_files['files']:
             if 'appProperties' in file:
                 if request.GET.get('tag') in file['appProperties']['tags']:
-                        new_files['files'].append(file)
+                    new_files['files'].append(file)
         all_files = new_files
     
     context = {
@@ -304,15 +304,11 @@ def create_document(request):
         category = request.POST.get('categories')
 
         complete_tags = tag_formatter(tag_list, extra_tags)
-
-        #TODO: Lists can't be stored as custom metadata.
-        # Need to retrieve the tag list and use join(', ')
-        # to convert them all into one long string.
         
         if 'credentials' not in request.session:
             return redirect('authorize')
             
-        new_file = drive_api_file_upload(
+        drive_api_file_upload(
             request, title=doc_title, 
             doc_type=post_doc_type, tags=complete_tags, category=category
         )

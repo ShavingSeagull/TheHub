@@ -11,7 +11,11 @@
 <!-- Recent Docs header -->
 <div class="row">
     <div class="col-12 mt-4 doc-list-header">
+        {% if all_files.files %}
         <h3 class="white-text d-inline-block mb-0">Results</h3>
+        {% else %}
+        <h3 class="white-text d-inline-block mb-0">No results found</h3>
+        {% endif %}
     </div>
 </div>
 <!-- Recent Docs cards -->

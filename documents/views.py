@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import os
 import os.path
@@ -94,7 +95,11 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
     }
 
     drive = google_drive_service_build(request)
-    new_file = drive.files().create(body=file_metadata).execute()
+    created_file = drive.files().create(body=file_metadata).execute()
+    new_file = drive.files().get(
+        fileId=created_file.get('id'),
+        fields="id, name, webViewLink"
+    ).execute()
 
     return new_file
 
@@ -298,6 +303,10 @@ def document_create(request):
     This allows for the addition of custom metadata (tags
     and a category).
     """
+
+    # TODO: Add newly entered tags to the database
+    # TODO: Open the newly created doc in a new tab
+
     doc_type = request.GET.get('doctype')
     categories = Category.objects.all()
     tags = Tag.objects.all()
@@ -314,10 +323,19 @@ def document_create(request):
         if 'credentials' not in request.session:
             return redirect('authorize')
             
-        drive_api_file_upload(
+        new_file = drive_api_file_upload(
             request, title=doc_title, 
             doc_type=post_doc_type, tags=complete_tags, category=category
         )
+
+        try:
+            return redirect(new_file['webViewLink'])
+        except:
+            messages.error(
+                request, 
+                "Could not open the new file on Google Drive. Please check the file there directly."
+            )
+            return redirect('home')
 
     context = {
         'doc_type_raw': doc_type,

@@ -181,6 +181,7 @@ def document_overview(request):
     relevant_files = json.loads(relevant_docs_data)
 
     # TODO: Pass the recent file tags through as well
+    recent_files_tags = tag_extractor(recent_files)
     relevant_files_tags = tag_extractor(relevant_files)
 
     categories = Category.objects.all()
@@ -189,6 +190,7 @@ def document_overview(request):
     context = {
         "recent_files": recent_files,
         "relevant_files": relevant_files,
+        "recent_files_tags": recent_files_tags,
         "relevant_files_tags": relevant_files_tags,
         "categories": categories,
         "tags": tags
@@ -290,7 +292,7 @@ def document_creation_selection(request):
     return render(request, "documents/document_creation_selection.html")
 
 @login_required
-def create_document(request):
+def document_create(request):
     """
     Allows the user to create a doc from within The Hub.
     This allows for the addition of custom metadata (tags
@@ -324,4 +326,4 @@ def create_document(request):
         'tags': tags
     }
 
-    return render(request, "documents/create_document.html", context=context)
+    return render(request, "documents/document_create.html", context=context)

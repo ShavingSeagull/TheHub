@@ -31,7 +31,17 @@
             <img src="{{ file.owners.0.photoLink }}" class="doc-list-card-img rounded-circle" alt="Author Display Picture">
             <p class="mt-3">{{ file.owners.0.displayName }}</p>
             <a href="{{ file.webViewLink }}" class="mt-3" target="_blank"><strong>{{ file.name }}</strong></a>
-            <p class="mt-3"><span>Tag</span> <span>Tag</span> <span>Tag</span></p>
+            {% if recent_files_tags %}
+            <p class="mt-3">
+                {% for entry in recent_files_tags %}
+                    {% if entry.id == file.id %}
+                        {% for tag in entry.tags %}
+                            <span>{{ tag }}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </p>
+            {% endif %}
         </div>
     </div>
     {% endfor %}

@@ -30,7 +30,7 @@
         {% endfor %}
     {% endif %}
     <!-- ./Django form errors -->
-    <form method="POST" action="{% url 'create_document' %}" class="form mt-5">
+    <form method="POST" action="{% url 'document_create' %}" class="form mt-5">
         {% csrf_token %}
         <input type="hidden" name="doc_type" value="{{ doc_type_raw }}">
         <fieldset class="mb-4">

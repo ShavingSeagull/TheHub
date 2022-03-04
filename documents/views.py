@@ -242,13 +242,16 @@ def document_search_and_filter(request):
 
     if request.method == "GET":
         if request.GET.get("category"):
+            frontend_search_term = Category.objects.get(name=request.GET.get('category')).friendly_name
             query = f"trashed = false and appProperties has {{key='category' and value='{request.GET.get('category')}'}} and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
         elif request.GET.get("tag"):
+            frontend_search_term = request.GET.get('tag')
             query = f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
             tag_filter = True
 
     elif request.method == "POST":
         search_term = request.POST.get('q')
+        frontend_search_term = search_term
         query = f"trashed = false and name contains '{search_term}' and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
 
     files = drive_api_search(request, query=query, page_size=1000, ordering="createdTime desc")
@@ -272,7 +275,8 @@ def document_search_and_filter(request):
         'categories': categories,
         'tags': tags,
         'file_tags': file_tags,
-        'all_files': all_files
+        'all_files': all_files,
+        'search_term': frontend_search_term
     }
 
     return render(request, "documents/document_list.html", context=context)

@@ -19,6 +19,8 @@
     <!-- Injected extra assets -->
     {% block injected_css %}
     {% endblock %}
+    <!-- Preloaded JS -->
+    <script src="{% static 'lib/jsCookie/js.cookie.min.js' %}"></script>
 </head>
 <body>
     {% if user.is_authenticated %}

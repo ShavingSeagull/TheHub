@@ -4,6 +4,7 @@ $(document).ready(function(){
         $('#all-tags-container').toggle(300);
     });
 
+    // Click listener to fire the document creation API call
     $('#doc-create-btn').click(function(){
         tagList = [];
         tags = $('.tags');
@@ -21,11 +22,7 @@ $(document).ready(function(){
             categories: $("[name='categories']").val(),
         }
 
-        for (let i = 0; i < formData.length; i++) {
-            console.log(`FORMDATA: ${i}`);
-        }
-
-        fetch('/documents/create-document-v2', {
+        fetch('/documents/create-document', {
             method: "POST",
             mode: 'same-origin',
             headers: {
@@ -37,16 +34,11 @@ $(document).ready(function(){
             body: JSON.stringify(formData)
         })
         .then(response => {
-            response.json();
-            for (let y = 0; y < response.length; y++){
-                console.log(`RESPONSE: ${response}`);
-            }
+            return response.json();
         })
         .then(data => {
             let parsedData = JSON.parse(data);
-            for (let x = 0; x < parsedData.length; x++){
-                console.log(`DATA: ${x}`);
-            }
+            window.open(parsedData['webViewLink'], '_blank');
         })
         .catch(error => {
             console.log(`Ajax Error: ${error}`);

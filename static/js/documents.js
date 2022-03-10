@@ -6,6 +6,9 @@ $(document).ready(function(){
 
     // Click listener to fire the document creation API call
     $('#doc-create-btn').click(function(){
+        $(this).attr("disabled", true);
+        $('#doc-create-spinner').removeClass('d-none');
+
         tagList = [];
         tags = $('.tags');
         for (let tag = 0; tag < tags.length; tag++) {
@@ -38,7 +41,10 @@ $(document).ready(function(){
         })
         .then(data => {
             let parsedData = JSON.parse(data);
+            // Opens the newly created doc in a separate tab
             window.open(parsedData['webViewLink'], '_blank');
+            // Redirects the doc creation page to the Home page
+            location.replace(location.origin);
         })
         .catch(error => {
             console.log(`Ajax Error: ${error}`);

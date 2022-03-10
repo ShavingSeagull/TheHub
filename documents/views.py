@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -305,19 +305,20 @@ def document_create(request):
     """
 
     # TODO: Add newly entered tags to the database
-    # TODO: Open the newly created doc in a new tab
+    # TODO: Add spinner to show document is being created
+    # while the AJAX request does its work
 
     doc_type = request.GET.get('doctype')
     categories = Category.objects.all()
     tags = Tag.objects.all()
 
     if request.method == 'POST':
-        post_doc_type = request.POST.get('doc_type')
-        doc_title = request.POST.get('doc_title')
-        tag_list = request.POST.getlist('tags')
-        extra_tags = request.POST.get('extra_tags')
-        category = request.POST.get('categories')
-
+        request_body = json.loads(request.body)
+        post_doc_type = request_body['doc_type']
+        doc_title = request_body['doc_title']
+        tag_list = request_body['tag_list']
+        extra_tags = request_body['extra_tags']
+        category = request_body['categories']
         complete_tags = tag_formatter(tag_list, extra_tags)
         
         if 'credentials' not in request.session:
@@ -328,14 +329,8 @@ def document_create(request):
             doc_type=post_doc_type, tags=complete_tags, category=category
         )
 
-        try:
-            return redirect(new_file['webViewLink'])
-        except:
-            messages.error(
-                request, 
-                "Could not open the new file on Google Drive. Please check the file there directly."
-            )
-            return redirect('home')
+        json_data = json.dumps(new_file)
+        return JsonResponse(json_data, safe=False)
 
     context = {
         'doc_type_raw': doc_type,

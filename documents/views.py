@@ -305,8 +305,6 @@ def document_create(request):
     """
 
     # TODO: Add newly entered tags to the database
-    # TODO: Add spinner to show document is being created
-    # while the AJAX request does its work
 
     doc_type = request.GET.get('doctype')
     categories = Category.objects.all()
@@ -319,10 +317,18 @@ def document_create(request):
         tag_list = request_body['tag_list']
         extra_tags = request_body['extra_tags']
         category = request_body['categories']
+
         complete_tags = tag_formatter(tag_list, extra_tags)
+        extra_tags_for_db = extra_tag_db_formatter(extra_tags)
+
+        print(f"EXTRA TAGS: {extra_tags_for_db}")
         
         if 'credentials' not in request.session:
             return redirect('authorize')
+        
+        # for tag in extra_tags_for_db:
+        #         if tag != existing_tag.name:
+        #             Tag.objects.create(name=tag)
             
         new_file = drive_api_file_upload(
             request, title=doc_title, 

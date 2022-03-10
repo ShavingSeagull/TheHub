@@ -100,6 +100,19 @@
     transform: scale(1.4);
 }
 
+#doc-create-spinner {
+    transform: rotate(360deg);
+    animation-name: spinner;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spinner {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
 /*** Media Queries ***/
 @media screen and (min-width: 1200px) {
     /* Override the Bootstrap class to allow for a slightly wider container on large screens */

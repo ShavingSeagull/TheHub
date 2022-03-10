@@ -30,6 +30,38 @@ def tag_formatter(tag_list: list, extra_tags: str) -> str:
     
     return f"{' '.join(tag_list)} {formatted_extra_tags}".strip()
 
+def extra_tag_db_formatter(extra_tags: str) -> list:
+    """
+    Takes the string of extra tags and splits them into a list,
+    stripping any whitespace from the start and end of each tag.
+    Returns a list to be run through for the purpose of adding new
+    tags to the database.
+
+    Params
+    ------
+    extra_tags: str
+        The string of extra tags to format
+
+    return type: list
+    """
+    if extra_tags is None or extra_tags == '':
+        return
+
+    tag_holding_list = extra_tags.split(' ')
+    tag_list = []
+
+    # The list will contain an index with an empty element if the
+    # user separates tags by more than one space on the frontend.
+    # This removes those elements for the returned list.
+    for x in range(len(tag_holding_list)):
+        if tag_holding_list[x] != '':
+            tag_list.append(tag_holding_list[x])
+
+    for i in range(len(tag_list)):
+        tag_list[i] = tag_list[i].strip()
+
+    return tag_list
+
 def tag_extractor(files: dict, for_frontend: bool = True) -> list:
     """
     Takes a string of tags from the Google document/sheet

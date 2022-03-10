@@ -30,7 +30,7 @@
         {% endfor %}
     {% endif %}
     <!-- ./Django form errors -->
-    <form method="POST" action="{% url 'document_create' %}" class="form mt-5">
+    <form method="POST" id="doc-create-form" class="form mt-5">
         {% csrf_token %}
         <input type="hidden" name="doc_type" value="{{ doc_type_raw }}">
         <fieldset class="mb-4">
@@ -66,7 +66,7 @@
                 <div id="all-tags-container">
                     {% for tag in tags %}
                     <label for="tag_{{ tag.name }}" class="pl-2 pr-3">
-                        <input type="checkbox" id="tag_{{ tag.name }}" name="tags" value="{{ tag.name }}" class="mr-1">
+                        <input type="checkbox" id="tag_{{ tag.name }}" name="tags" value="{{ tag.name }}" class="tags mr-1">
                         {{ tag.name }}
                     </label>
                     {% endfor %}
@@ -98,7 +98,7 @@
                 </small>
             </div>
         </fieldset>
-        <input type="submit" class="btn branded-btn" value="Create document" />
+        <button id="doc-create-btn" type="button" class="btn branded-btn">Create Document</button>
     </form>
 </section>
 {% endblock %}

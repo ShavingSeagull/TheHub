@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import os
@@ -306,7 +306,7 @@ def document_create(request):
 
     # TODO: Add newly entered tags to the database
 
-    doc_type = request.GET.get('doctype')
+    doc_type = request.GET.get('doctype') if request.GET.get('doctype') else 'Doc'
     categories = Category.objects.all()
     tags = Tag.objects.all()
 
@@ -326,9 +326,9 @@ def document_create(request):
         if 'credentials' not in request.session:
             return redirect('authorize')
         
-        # for tag in extra_tags_for_db:
-        #         if tag != existing_tag.name:
-        #             Tag.objects.create(name=tag)
+        for tag in extra_tags_for_db:
+                if not get_object_or_404(Tag, name=tag):
+                    Tag.objects.create(name=tag)
             
         new_file = drive_api_file_upload(
             request, title=doc_title, 

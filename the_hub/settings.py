@@ -44,13 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_forms_bootstrap',
-    'storages',
     'crispy_forms',
     'accounts',
     'home',
     'profiles',
     'administration',
     'documents',
+    'storages',
 ]
 
 MIDDLEWARE = [

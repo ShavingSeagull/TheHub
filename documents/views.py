@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 import os
 import os.path
 import json
+import requests
 import google
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -17,10 +18,15 @@ from the_hub.settings import STATIC_URL
 from .models import Category, Tag
 from .helpers import *
 
+# Global constants
 SCOPES = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
 ]
+
+# Loads the creds file URL for use with Google OAuth
+CREDS_URL = os.environ.get("OAUTH_CREDS_URL")
+R = requests.get(CREDS_URL)
 
 @login_required
 def google_drive_service_build(request):
@@ -106,10 +112,15 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
 
 @login_required
 def authorize(request):
+    # Retrieves the contents of the Creds file if it doesn't already exist.
+    # File is stored for use by Authorize and OAuth2Callback below.
+    if not os.path.exists('oauth_creds_v2.json'):
+        with open("oauth_creds_v2.json", 'wb') as f:
+            f.write(R.content)
     # Use the client_secret.json file to identify the application requesting
     # authorization. The client ID (from that file) and access scopes are required.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        os.environ.get("OAUTH_CREDS_URL"),
+        'oauth_creds_v2.json',
         scopes=SCOPES)
 
     # Indicate where the API server will redirect the user after the user completes
@@ -139,7 +150,7 @@ def oauth2Callback(request):
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     # state = request.session['state']
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        os.environ.get("OAUTH_CREDS_URL"),
+        'oauth_creds_v2.json',
         scopes=SCOPES)
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
 
@@ -160,6 +171,11 @@ def oauth2Callback(request):
         'client_id': credentials.client_id,
         'client_secret': credentials.client_secret,
         'scopes': credentials.scopes}
+    
+    # Creds file is deleted for security after it has been used by the
+    # callback function and the necessary data from it stored in the session.
+    if os.path.exists('oauth_creds_v2.json'):
+        os.remove('oauth_creds_v2.json')
     
     return redirect('document_overview')
 

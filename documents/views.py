@@ -13,6 +13,7 @@ import google_auth_oauthlib.flow
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from the_hub.settings import STATIC_URL
 from .models import Category, Tag
 from .helpers import *
 
@@ -108,7 +109,7 @@ def authorize(request):
     # Use the client_secret.json file to identify the application requesting
     # authorization. The client ID (from that file) and access scopes are required.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'static/oauth_creds.json',
+        os.environ.get("OAUTH_CREDS_URL"),
         scopes=SCOPES)
 
     # Indicate where the API server will redirect the user after the user completes
@@ -138,7 +139,7 @@ def oauth2Callback(request):
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     # state = request.session['state']
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'static/oauth_creds.json',
+        os.environ.get("OAUTH_CREDS_URL"),
         scopes=SCOPES)
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
 

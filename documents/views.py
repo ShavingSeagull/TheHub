@@ -14,7 +14,7 @@ import google_auth_oauthlib.flow
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from the_hub.settings import STATIC_URL
+from accounts.models import GoogleOauthCredentials
 from .models import Category, Tag
 from .helpers import *
 
@@ -25,6 +25,9 @@ SCOPES = [
 ]
 
 # Loads the creds file URL for use with Google OAuth
+# Inspiration for using the requests library to achieve this sourced from:
+# https://www.codespeedy.com/how-to-download-files-from-url-using-python/
+# Credit to Asma Khan
 CREDS_URL = os.environ.get("OAUTH_CREDS_URL")
 R = requests.get(CREDS_URL)
 
@@ -34,16 +37,23 @@ def google_drive_service_build(request):
     Builds the connection to v3 of the Google Drive API
     and returns the built service object.
     """
+    user_creds_profile = GoogleOauthCredentials.objects.get(user=request.user)
+    user_creds = user_creds_to_dict(
+        user_creds_profile,
+        SCOPES
+    )
     credentials = google.oauth2.credentials.Credentials(
-        **request.session['credentials'])
-    
-    request.session['credentials'] = {
-        'token': credentials.token,
-        'refresh_token': credentials.refresh_token,
-        'token_uri': credentials.token_uri,
-        'client_id': credentials.client_id,
-        'client_secret': credentials.client_secret,
-        'scopes': credentials.scopes}
+        **user_creds
+    )
+
+    # Save the credentials again in case the tokens have changed.
+    # This is advised by Google.
+    user_creds_profile.token = credentials.token
+    user_creds_profile.refresh_token = credentials.refresh_token
+    user_creds_profile.token_uri = credentials.token_uri
+    user_creds_profile.client_id = credentials.client_id
+    user_creds_profile.client_secret = credentials.client_secret
+    user_creds_profile.save()
 
     return build('drive', 'v3', credentials=credentials)
 
@@ -54,9 +64,6 @@ def drive_api_search(request, query: str, page_size: int, ordering: str = None):
     """
     drive = google_drive_service_build(request)
 
-    # TODO: Tie this in with the document_list function below.
-    # May need some further refining, but this appears to pull
-    # through all the Docs in my Drive at work - check Sheets too
     files = drive.files().list(
         q=query,
         corpora="user",
@@ -66,8 +73,6 @@ def drive_api_search(request, query: str, page_size: int, ordering: str = None):
         # id, name, mimeType, description?, 
         # viewedByMe, viewedByMeTime, thumbnailLink?, createdTime,
         # modifiedTime, modifiedByMe, modifiedByMeTime, sharedWithMeTime)
-        #
-        # Will also need files(owners[0][displayName, photoLink]), but unsure of syntax
         fields="files(id, name, mimeType, description, properties, appProperties, owners, webViewLink)",
         orderBy=ordering,
         pageSize=page_size
@@ -105,7 +110,7 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
     created_file = drive.files().create(body=file_metadata).execute()
     new_file = drive.files().get(
         fileId=created_file.get('id'),
-        fields="id, name, webViewLink"
+        fields="id, name, webViewLink, appProperties"
     ).execute()
 
     return new_file
@@ -114,13 +119,13 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
 def authorize(request):
     # Retrieves the contents of the Creds file if it doesn't already exist.
     # File is stored for use by Authorize and OAuth2Callback below.
-    if not os.path.exists('oauth_creds_v2.json'):
-        with open("oauth_creds_v2.json", 'wb') as f:
+    if not os.path.exists('oauth_creds.json'):
+        with open("oauth_creds.json", 'wb') as f:
             f.write(R.content)
     # Use the client_secret.json file to identify the application requesting
     # authorization. The client ID (from that file) and access scopes are required.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'oauth_creds_v2.json',
+        'oauth_creds.json',
         scopes=SCOPES)
 
     # Indicate where the API server will redirect the user after the user completes
@@ -150,7 +155,7 @@ def oauth2Callback(request):
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     # state = request.session['state']
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'oauth_creds_v2.json',
+        'oauth_creds.json',
         scopes=SCOPES)
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
 
@@ -158,24 +163,21 @@ def oauth2Callback(request):
     authorization_response = request.path
     # flow.fetch_token(authorization_response=authorization_response)
     flow.fetch_token(code=code)
-
-    # Store the credentials in the session.
-    # ACTION ITEM for developers:
-    #     Store user's access and refresh tokens in your data store if
-    #     incorporating this code into your real app.
     credentials = flow.credentials
-    request.session['credentials'] = {
-        'token': credentials.token,
-        'refresh_token': credentials.refresh_token,
-        'token_uri': credentials.token_uri,
-        'client_id': credentials.client_id,
-        'client_secret': credentials.client_secret,
-        'scopes': credentials.scopes}
+
+    # Save the credentials to the DB
+    user_creds = GoogleOauthCredentials.objects.get(user=request.user)
+    user_creds.token = credentials.token
+    user_creds.refresh_token = credentials.refresh_token
+    user_creds.token_uri = credentials.token_uri
+    user_creds.client_id = credentials.client_id
+    user_creds.client_secret = credentials.client_secret
+    user_creds.save()
     
     # Creds file is deleted for security after it has been used by the
-    # callback function and the necessary data from it stored in the session.
-    if os.path.exists('oauth_creds_v2.json'):
-        os.remove('oauth_creds_v2.json')
+    # callback function and the necessary data from it stored.
+    if os.path.exists('oauth_creds.json'):
+        os.remove('oauth_creds.json')
     
     return redirect('document_overview')
 
@@ -191,7 +193,8 @@ def document_overview(request):
 
     # TODO: Reduce to a single API request and sort the data by sharedWithMeTime and viewedByMeTime on the backend
 
-    if 'credentials' not in request.session:
+    user_creds = GoogleOauthCredentials.objects.get(user=request.user)
+    if not user_creds.token or not user_creds.refresh_token:
         return redirect('authorize')
 
     # Query needs to check for whether the document was shared with the user or whether the user owns it themselves.
@@ -227,7 +230,8 @@ def document_list(request):
     the document search bar or by clicking the 'See All'
     button on the document_overview page.
     """
-    if 'credentials' not in request.session:
+    user_creds = GoogleOauthCredentials.objects.get(user=request.user)
+    if not user_creds.token or not user_creds.refresh_token:
         return redirect('authorize')
 
     results = request.GET.get('results')
@@ -260,6 +264,10 @@ def document_search_and_filter(request):
     document_base template. POST requests will be fired by the
     search bar; GET requests will be fired by the filters
     """
+    user_creds = GoogleOauthCredentials.objects.get(user=request.user)
+    if not user_creds.token or not user_creds.refresh_token:
+        return redirect('authorize')
+
     categories = Category.objects.all()
     tags = Tag.objects.all()
     tag_filter = False
@@ -320,6 +328,9 @@ def document_create(request):
     This allows for the addition of custom metadata (tags
     and a category).
     """
+    user_creds = GoogleOauthCredentials.objects.get(user=request.user)
+    if not user_creds.token or not user_creds.refresh_token:
+        return redirect('authorize')
 
     # TODO: Add newly entered tags to the database
 
@@ -340,17 +351,17 @@ def document_create(request):
 
         print(f"EXTRA TAGS: {extra_tags_for_db}")
         
-        if 'credentials' not in request.session:
-            return redirect('authorize')
-        
-        for tag in extra_tags_for_db:
-                if not get_object_or_404(Tag, name=tag):
-                    Tag.objects.create(name=tag)
+        if extra_tags_for_db:
+            for tag in extra_tags_for_db:
+                    if not get_object_or_404(Tag, name=tag):
+                        Tag.objects.create(name=tag)
             
         new_file = drive_api_file_upload(
             request, title=doc_title, 
             doc_type=post_doc_type, tags=complete_tags, category=category
         )
+
+        print(f"NEW FILE: {new_file}")
 
         json_data = json.dumps(new_file)
         return JsonResponse(json_data, safe=False)

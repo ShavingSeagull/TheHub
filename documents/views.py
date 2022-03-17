@@ -122,31 +122,20 @@ def authorize(request):
     if not os.path.exists('oauth_creds.json'):
         with open("oauth_creds.json", 'wb') as f:
             f.write(R.content)
-    # Use the client_secret.json file to identify the application requesting
-    # authorization. The client ID (from that file) and access scopes are required.
+    
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         'oauth_creds.json',
         scopes=SCOPES)
 
-    # Indicate where the API server will redirect the user after the user completes
-    # the authorization flow. The redirect URI is required. The value must exactly
-    # match one of the authorized redirect URIs for the OAuth 2.0 client, which you
-    # configured in the API Console. If this value doesn't match an authorized URI,
-    # you will get a 'redirect_uri_mismatch' error.
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
 
     # Generate URL for request to Google's OAuth 2.0 server.
-    # Use kwargs to set optional request parameters.
     authorization_url, state = flow.authorization_url(
-        # Enable offline access so that you can refresh an access token without
-        # re-prompting the user for permission. Recommended for web server apps.
+        # Enable offline access to allow the refresh of an access token without
+        # re-prompting the user for permission. Recommended for web server apps by Google.
         access_type='offline',
-        # If your application knows which user is trying to authenticate, it can 
-        # use this parameter to provide a hint to the Google Authentication Server. 
-        # The server uses the hint to simplify the login flow either by prefilling the 
-        # email field in the sign-in form or by selecting the appropriate multi-login session.
         login_hint=request.user.email,
-        # Enable incremental authorization. Recommended as a best practice.
+        # Enable incremental authorization. Recommended as a best practice by Google.
         include_granted_scopes='true')
     
     return redirect(authorization_url)
@@ -205,7 +194,6 @@ def document_overview(request):
     recent_files = json.loads(recent_docs_data)
     relevant_files = json.loads(relevant_docs_data)
 
-    # TODO: Pass the recent file tags through as well
     recent_files_tags = tag_extractor(recent_files)
     relevant_files_tags = tag_extractor(relevant_files)
 
@@ -332,8 +320,6 @@ def document_create(request):
     if not user_creds.token or not user_creds.refresh_token:
         return redirect('authorize')
 
-    # TODO: Add newly entered tags to the database
-
     doc_type = request.GET.get('doctype') if request.GET.get('doctype') else 'Doc'
     categories = Category.objects.all()
     tags = Tag.objects.all()
@@ -349,22 +335,19 @@ def document_create(request):
         complete_tags = tag_formatter(tag_list, extra_tags)
         extra_tags_for_db = extra_tag_db_formatter(extra_tags)
 
-        print(f"EXTRA TAGS: {extra_tags_for_db}")
-        
         if extra_tags_for_db:
             for tag in extra_tags_for_db:
-                    if not get_object_or_404(Tag, name=tag):
-                        Tag.objects.create(name=tag)
+                try:
+                    Tag.objects.get(name=tag)
+                except Tag.DoesNotExist:
+                    Tag.objects.create(name=tag)
             
         new_file = drive_api_file_upload(
             request, title=doc_title, 
             doc_type=post_doc_type, tags=complete_tags, category=category
         )
 
-        print(f"NEW FILE: {new_file}")
-
-        json_data = json.dumps(new_file)
-        return JsonResponse(json_data, safe=False)
+        return JsonResponse(new_file, safe=False)
 
     context = {
         'doc_type_raw': doc_type,

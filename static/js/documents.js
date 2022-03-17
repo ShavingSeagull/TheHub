@@ -1,28 +1,3 @@
-/**
- * Wraps the API Fetch call into a function in order to implement
- * the ability to retry should the server suffer transient fails.
- * Code adapted from: https://stackoverflow.com/questions/55651169/javascript-fetch-returns-404-occasionally
- * Credit to T.J. Crowder for his solution.
- * @param {string} input 
- * @param {*} init 
- * @param {int} retries
- */
-function uploadDoc(input, init, retries=10) {
-    return fetch(input, init)
-        .then(function(response) {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error(`Response status: ${response.status}`);
-        })
-        .catch(error => {
-            if (retries <= 0) {
-                throw error;
-            }
-            return uploadDoc(input, init, retries - 1);
-        });
-}
-
 $(document).ready(function(){
     // Click listener to toggle the Tags display
     $('#all-tags-btn').click(function(){
@@ -37,9 +12,11 @@ $(document).ready(function(){
 
         tagList = [];
         tags = $('.tags');
-        for (let tag = 0; tag < tags.length; tag++) {
-            if (tags[tag].checked) {
-                tagList.push(tags[tag].value);
+        if (tags) {
+            for (let tag = 0; tag < tags.length; tag++) {
+                if (tags[tag].checked) {
+                    tagList.push(tags[tag].value);
+                }
             }
         }
 
@@ -51,7 +28,8 @@ $(document).ready(function(){
             categories: $("[name='categories']").val(),
         }
 
-        uploadDoc('/documents/create-document', {
+        // Fires the call to the backend to create the document
+        fetch('/documents/create-document', {
             method: "POST",
             mode: 'same-origin',
             headers: {
@@ -62,17 +40,17 @@ $(document).ready(function(){
             },
             body: JSON.stringify(formData)
         })
+        .then(response => {
+            return response.json();
+        })
         .then(data => {
-            if (data.Status === 'OK') {
-                let parsedData = JSON.parse(data);
-                // Opens the newly created doc in a separate tab
-                window.open(parsedData['webViewLink'], '_blank');
-                // Redirects the doc creation page to the Home page
-                location.replace(HOME_URL);
-            }
+            // Opens the newly created doc in a separate tab
+            window.open(data['webViewLink'], '_blank');
+            // Redirects the doc creation page to the Home page
+            location.replace(HOME_URL);
         })
         .catch(error => {
-            console.log(`All API attempts failed: ${error}`);
+            console.log(`Document creation failed: ${error}`);
         })
     });
 });

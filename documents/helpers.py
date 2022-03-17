@@ -104,3 +104,28 @@ def tag_extractor(files: dict, for_frontend: bool = True) -> list:
                     tags_per_file.append({'id': file['id'], 'tags': tags.split(' ')})
 
     return tags_per_file
+
+def user_creds_to_dict(user_creds_profile, scopes) -> dict:
+    """
+    Takes only the fields needed from the User's
+    Google credentials profile in order to pass
+    them to Google for authentication purposes.
+    Cuts out things like the ID and the FK to the User.
+
+    Params
+    ------
+    user_creds_profile: GoogleOauthCredentials object instance
+        The instance of the user's Google auth creds
+
+    return type: dict
+    """
+    user_creds = {
+        'token': user_creds_profile.token,
+        'refresh_token': user_creds_profile.refresh_token,
+        'token_uri': user_creds_profile.token_uri,
+        'client_id': user_creds_profile.client_id,
+        'client_secret': user_creds_profile.client_secret,
+        'scopes': scopes
+    }
+
+    return user_creds

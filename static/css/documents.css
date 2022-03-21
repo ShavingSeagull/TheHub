@@ -45,6 +45,13 @@
     bottom: calc(100% - 45px);
 }
 
+#creation-error {
+    display: none;
+    color: firebrick;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
 /* Card corner ribbon - code from the CSS Ribbon Generator: https://www.cssportal.com/css-ribbon-generator/ */
 .ribbon {
     position: absolute;

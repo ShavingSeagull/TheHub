@@ -51,6 +51,7 @@ $(document).ready(function(){
         })
         .catch(error => {
             console.log(`Document creation failed: ${error}`);
+            $('#creation-error').toggle();
         })
     });
 });

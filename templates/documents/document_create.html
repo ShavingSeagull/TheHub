@@ -98,6 +98,11 @@
                 </small>
             </div>
         </fieldset>
+        <!-- If there is an error trying to create the doc in the API call, it will be displayed here -->
+        <div id="creation-error" class="mb-3">
+            Encountered an issue when trying to create the document. This is usually due to authorization. 
+            Please visit the <a href="{% url 'document_overview' %}">Document Overview</a> page to re-authorize.
+        </div>
         <button id="doc-create-btn" type="button" class="btn branded-btn">Create Document</button>
         <i id="doc-create-spinner" class="fas fa-spinner d-none"></i>
     </form>

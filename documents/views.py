@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import os
 import os.path
+import hashlib
 import json
 import requests
 import google
@@ -122,36 +123,55 @@ def authorize(request):
     if not os.path.exists('oauth_creds.json'):
         with open("oauth_creds.json", 'wb') as f:
             f.write(R.content)
-    
+
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         'oauth_creds.json',
         scopes=SCOPES)
 
     flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
+
+    # Generates a random state token to prevent CSRF attacks. Not mandatory, but recommended
+    # by Google.
+    state_token = hashlib.sha256(os.urandom(1024)).hexdigest()
 
     # Generate URL for request to Google's OAuth 2.0 server.
     authorization_url, state = flow.authorization_url(
         # Enable offline access to allow the refresh of an access token without
         # re-prompting the user for permission. Recommended for web server apps by Google.
         access_type='offline',
+        state=state_token,
         login_hint=request.user.email,
         # Enable incremental authorization. Recommended as a best practice by Google.
         include_granted_scopes='true')
+    
+    request.session['state'] = state
     
     return redirect(authorization_url)
 
 def oauth2Callback(request):
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    # state = request.session['state']
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'oauth_creds.json',
-        scopes=SCOPES)
-    flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
+    state = request.session['state']
 
-    code = request.GET.get("code")
-    authorization_response = request.path
-    # flow.fetch_token(authorization_response=authorization_response)
-    flow.fetch_token(code=code)
+    try:
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            'oauth_creds.json',
+            scopes=SCOPES,
+            state=state)
+        flow.redirect_uri = request.build_absolute_uri(reverse('oauth2callback'))
+
+        code = request.GET.get("code")
+        authorization_response = request.path
+        
+        if code:
+            flow.fetch_token(code=code)
+        else:
+            flow.fetch_token(authorization_response=authorization_response)
+    except:
+        # Catches any MismatchedStateErrors from Google if the user cancels the consent request.
+        # State needs further work when time allows - Google's docs make using state tokens less
+        # than user-friendly.
+        return redirect('home')
+
     credentials = flow.credentials
 
     # Save the credentials to the DB
@@ -189,8 +209,15 @@ def document_overview(request):
     # Query needs to check for whether the document was shared with the user or whether the user owns it themselves.
     # This is due to docs that are owned directly not having a truthy shared status (as you can't share a doc with yourself).
     q=f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
-    recent_docs_data = drive_api_search(request, query=q, page_size=3, ordering="sharedWithMeTime desc")
-    relevant_docs_data = drive_api_search(request, query=q, page_size=3, ordering="viewedByMeTime desc")
+    
+    # If the user revokes access via their security settings on Google, the API call will error. This checks if the call
+    # can be made and, if not, reroutes to the OAuth authorization process
+    try:
+        recent_docs_data = drive_api_search(request, query=q, page_size=3, ordering="sharedWithMeTime desc")
+        relevant_docs_data = drive_api_search(request, query=q, page_size=3, ordering="viewedByMeTime desc")
+    except:
+        return redirect('authorize')
+    
     recent_files = json.loads(recent_docs_data)
     relevant_files = json.loads(relevant_docs_data)
 
@@ -226,9 +253,15 @@ def document_list(request):
     q=f"trashed = false and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
 
     if results == 'recent':
-        docs_data = drive_api_search(request, query=q, page_size=1000, ordering="sharedWithMeTime desc")
+        try:
+            docs_data = drive_api_search(request, query=q, page_size=1000, ordering="sharedWithMeTime desc")
+        except:
+            return redirect('authorize')
     elif results == 'relevant':
-        docs_data = drive_api_search(request, query=q, page_size=1000, ordering="viewedByMeTime desc")
+        try:
+            docs_data = drive_api_search(request, query=q, page_size=1000, ordering="viewedByMeTime desc")
+        except:
+            return redirect('authorize')
 
     all_files = json.loads(docs_data)
     file_tags = tag_extractor(all_files)
@@ -274,7 +307,11 @@ def document_search_and_filter(request):
         frontend_search_term = search_term
         query = f"trashed = false and name contains '{search_term}' and (sharedWithMe = true or '{request.user.email}' in owners) and (mimeType='application/vnd.google-apps.document' or mimeType='application/vnd.google-apps.spreadsheet')" # noqa: E501
 
-    files = drive_api_search(request, query=query, page_size=1000, ordering="createdTime desc")
+    try:
+        files = drive_api_search(request, query=query, page_size=1000, ordering="createdTime desc")
+    except:
+        return redirect('authorize')
+
     all_files = json.loads(files)
     file_tags = tag_extractor(all_files)
     all_tags = tag_extractor(all_files, for_frontend=False)
@@ -341,11 +378,16 @@ def document_create(request):
                     Tag.objects.get(name=tag)
                 except Tag.DoesNotExist:
                     Tag.objects.create(name=tag)
-            
-        new_file = drive_api_file_upload(
-            request, title=doc_title, 
-            doc_type=post_doc_type, tags=complete_tags, category=category
-        )
+        
+        try:
+            new_file = drive_api_file_upload(
+                request, title=doc_title, 
+                doc_type=post_doc_type, tags=complete_tags, category=category
+            )
+        except:
+            # Authorization ends up redirecting to the Document Overview page instead. This message is to prevent any confusion.
+            messages.info(request, "Re-authorization was needed. Please proceed with document creation again.")
+            return redirect('authorize')
 
         return JsonResponse(new_file, safe=False)
 

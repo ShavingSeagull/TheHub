@@ -52,6 +52,12 @@
     font-size: 0.85rem;
 }
 
+.tag-badge {
+    font-size: 90%;
+    background-color: var(--s-teal);
+    color: #fff;
+}
+
 /* Card corner ribbon - code from the CSS Ribbon Generator: https://www.cssportal.com/css-ribbon-generator/ */
 .ribbon {
     position: absolute;

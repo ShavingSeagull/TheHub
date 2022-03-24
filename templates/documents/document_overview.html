@@ -71,7 +71,7 @@
                 {% for entry in relevant_files_tags %}
                     {% if entry.id == file.id %}
                         {% for tag in entry.tags %}
-                            <span>{{ tag }}</span>
+                            <span class="badge badge-pill tag-badge">{{ tag }}</span>
                         {% endfor %}
                     {% endif %}
                 {% endfor %}

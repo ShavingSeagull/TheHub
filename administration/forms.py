@@ -39,7 +39,7 @@ class EditUserForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].required = True
 
-class CreateCategoryForm(forms.ModelForm):
+class CreateEditCategoryForm(forms.ModelForm):
     """
     A form for creating a new category for document creation.
     """

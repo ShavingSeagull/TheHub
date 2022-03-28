@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from django.core.mail import send_mail, BadHeaderError
 from django.template.loader import render_to_string
-from .forms import CreateUserForm, EditUserForm
+from .forms import CreateUserForm, EditUserForm, CreateCategoryForm
+from .helpers import *
 
 @login_required
 @user_passes_test(lambda u:u.is_staff)
@@ -170,6 +171,31 @@ def delete_user(request):
     
     context = {'users': users}
     return render(request, "administration/delete_user.html", context=context)
+
+@login_required
+@user_passes_test(lambda u:u.is_staff)
+def create_category(request):
+    """
+    Allows an admin user to create a new category for document creation.
+    """
+    if request.method == "POST":
+        form = CreateCategoryForm(request.POST)
+        if form.is_valid():
+            category_form = form.save(commit=False)
+            category_form.name = category_name_converter(request.POST.get('friendly_name'))
+            form.save()
+
+            messages.success(request, "Category added successfully")
+
+            if not request.POST.get('add_extra_category'):
+                return redirect('admin_area')
+    
+    form = CreateCategoryForm()
+    context = {
+        'form': form
+    }
+
+    return render(request, "administration/create_category.html", context=context)
 
 @login_required
 @user_passes_test(lambda u:u.is_staff)

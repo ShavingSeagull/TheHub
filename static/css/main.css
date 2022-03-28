@@ -23,13 +23,6 @@
 
 /*
 --------------------------
-        TODO LIST
---------------------------
-- Align navbar icons when they have been chosen and finalised
-*/
-
-/*
---------------------------
       GENERAL STYLES
 --------------------------
 */
@@ -72,6 +65,10 @@ a:hover {
   padding: 30px;
   border-radius: 10px;
   box-shadow: 5px 5px 2px #000;
+}
+
+input[type=checkbox] {
+  transform: scale(1.4);
 }
 
 /* 

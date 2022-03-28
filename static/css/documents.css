@@ -109,10 +109,6 @@
     display: none;
 }
 
-#all-tags-container input[name='tags'] {
-    transform: scale(1.4);
-}
-
 #doc-create-spinner {
     transform: rotate(360deg);
     animation-name: spinner;

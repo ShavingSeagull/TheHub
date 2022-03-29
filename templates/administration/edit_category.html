@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
+{% load crispy_forms_tags %}
+{% block title %}Edit a Category{% endblock %}
+
+{% block main_content %}
+<section class="container pb-5">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">Edit a Category</h1>
+        </div>
+    </div>
+    <!-- Django form errors -->
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.name }}: {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- ./Django form errors -->
+    <form method="POST" action="" class="form mt-5">
+        {% csrf_token %}
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Categories</legend>
+            <div class="form-group">
+                <label for="categories">Select a category:</label>
+                <select name="categories" id="categories">
+                    <option value="" selected disabled>Select:</option>
+                    {% for category in categories %}
+                        <option class="category-option" value="{{ category.name }}">{{ category.friendly_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {{ form.friendly_name | as_crispy_field }}
+            <small class="text-muted">
+                Provide the human-readable name for the category, such as <strong>Learning Success</strong>. 
+                This will be converted to a machine-friendly version when stored to the database.
+            </small>
+        </fieldset>
+        <fieldset class="mb-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="edit_extra_category" id="another-category">
+                <label class="form-check-label" for="another-category">Edit another category?</label>
+            </div>
+        </fieldset>
+        <input type="submit" class="btn branded-btn" value="Edit category" disabled/>
+    </form>
+</section>
+{% endblock %}
+
+{% block injected_js %}
+<script src="{% static 'js/administration.js' %}"></script>
+{% endblock %}

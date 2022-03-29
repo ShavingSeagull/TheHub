@@ -230,6 +230,29 @@ def edit_category(request):
 
 @login_required
 @user_passes_test(lambda u:u.is_staff)
+def delete_category(request):
+    """
+    Allows an admin user to delete a category without going through the
+    Django admin panel.
+    """
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        try:
+            category = Category.objects.get(name=request.POST.get('categories'))
+            category.delete()
+            messages.success(request, "Category removed successfully.")
+            return redirect('admin_area')
+        except category.DoesNotExist:
+            messages.error(request, "That category cannot be located.")
+    
+    context = {
+        'categories': categories
+        }
+    return render(request, "administration/delete_category.html", context=context)
+
+@login_required
+@user_passes_test(lambda u:u.is_staff)
 def user_data_api(request, username):
     """
     Returns the dataset for current users, in order to edit details

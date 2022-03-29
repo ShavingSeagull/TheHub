@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Server error{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">501</h1>
+            <h3 class="page-subheader mx-auto">Not implemented</h3>
+        </div>
+    </div>
+    <!-- /.Header section -->
+    <div class="row mt-5">
+        <div class="col-12 col-md-8 card error-card p-4 mb-3 mb-md-5 text-center mx-auto">
+            <strong>
+                It looks like the resource you're trying to access hasn't been 
+                implemented yet. Please try again in the future. If this is a 
+                resource you know usually works, please contact Engineering or Scott.
+            </strong>
+        </div>
+    </div>
+</section>
+{% endblock %}

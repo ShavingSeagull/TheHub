@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Server error{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">500</h1>
+            <h3 class="page-subheader mx-auto">Server error</h3>
+        </div>
+    </div>
+    <!-- /.Header section -->
+    <div class="row mt-5">
+        <div class="col-12 col-md-8 card error-card p-4 mb-3 mb-md-5 text-center mx-auto">
+            <strong>
+                Something has unfortunately gone awry on our end - sorry! 
+                Give whatever you were trying another shot and if it continues to error, 
+                contact Engineering or Scott.
+            </strong>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -275,7 +275,7 @@ noscript > p {
   font-size: 2rem;
 }
 
-.selection-card {
+.selection-card, .error-card {
   box-shadow: 5px 5px 2px #000;
 }
 

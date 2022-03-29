@@ -46,12 +46,30 @@ $(document).ready(function(){
         })
     });
 
+    $('#users').click(function(){
+        if ($(this).val()) {
+            $('input[type=submit]').attr("disabled", false);
+        } else {
+            $('input[type=submit]').attr("disabled", true);
+        }
+    });
+
     /* 
        ----------------------
         ADMIN CATEGORY PAGES
        ----------------------
     */
+    let currentPage = location.pathname;
+    let btnValue;
+    let btnCheckedValue;
 
+    if (currentPage.includes("create-category")) {
+        btnValue = "Create";
+        btnCheckedValue = "add";
+    } else if (currentPage.includes("edit-category")) {
+        btnValue = "Edit";
+        btnCheckedValue = "edit";
+    }
     /*
     Alters the label on the create_category template to say
     'Name' rather than the actual field name of 'Friendly Name'.
@@ -63,11 +81,23 @@ $(document).ready(function(){
     Changes the value of the submit button based on whether the 
     checbox to add another category is checked
     */
-    $('#add-another-category').click(function(){
+    $('#another-category').click(function(){
         if (this.checked) {
-            $('input[type=submit]').val("Save and add another");
+            $('input[type=submit]').val(`Save and ${btnCheckedValue} another`);
         } else {
-            $('input[type=submit]').val("Create category");
+            $('input[type=submit]').val(`${btnValue} category`);
+        }
+    });
+
+    $('.category-option').click(function(){
+        $('#id_friendly_name').val($(this).text());
+    });
+
+    $('#categories').click(function(){
+        if ($(this).val()) {
+            $('input[type=submit]').attr("disabled", false);
+        } else {
+            $('input[type=submit]').attr("disabled", true);
         }
     });
 });

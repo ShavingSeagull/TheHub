@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Page not found{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">404</h1>
+            <h3 class="page-subheader mx-auto">Page not found</h3>
+        </div>
+    </div>
+    <!-- /.Header section -->
+    <div class="row mt-5">
+        <div class="col-12 col-md-8 card error-card p-4 mb-3 mb-md-5 text-center mx-auto">
+            <strong>
+                Looks like you've ventured on to a page that doesn't exist. 
+                While we're happy for you to take the blame for this, we'll 
+                do the noble thing and hold our hands up...this time.
+            </strong>
+        </div>
+    </div>
+</section>
+{% endblock %}

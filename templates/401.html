@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Unauthorised{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">401</h1>
+            <h3 class="page-subheader mx-auto">Unauthorised</h3>
+        </div>
+    </div>
+    <!-- /.Header section -->
+    <div class="row mt-5">
+        <div class="col-12 col-md-8 card error-card p-4 mb-3 mb-md-5 text-center mx-auto">
+            <strong>
+                It looks like you're trying to access a resource that requires credentials 
+                that are currently missing. If this is a resource you are meant to have access 
+                to, please contact Engineering, Scott or your Team Lead.
+            </strong>
+        </div>
+    </div>
+</section>
+{% endblock %}

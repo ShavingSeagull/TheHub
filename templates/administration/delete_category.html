@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
+{% load crispy_forms_tags %}
+{% block title %}Delete Category{% endblock %}
+
+{% block main_content %}
+<section class="container pb-5">
+    <!-- Header section -->
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h1 class="page-header mx-auto">Delete a Category</h1>
+        </div>
+    </div>
+    <!-- Django form errors -->
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.name }}: {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- ./Django form errors -->
+    <form method="POST" action="" class="form mt-5">
+        {% csrf_token %}
+        <div class="alert alert-warning">
+            <strong>
+                Be advised, removing a category will prevent searching for documents that contain said category. 
+                The documents that have the category applied will continue to do so after deletion. This will have 
+                no adverse effect on documents listed on The Hub.
+            </strong>
+        </div>
+        <fieldset class="mb-4">
+            <legend class="fieldset-label text-black mb-3 w-auto">Categories</legend>
+            <div class="form-group">
+                <label for="categories">Select a user:</label>
+                <select name="categories" id="categories">
+                    <option value="" selected disabled>Select:</option>
+                    {% for category in categories %}
+                        <option class="category-option" value="{{ category.name }}">{{ category.friendly_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_friendly_name">Category:</label>
+                <input id="id_friendly_name" class="form-control" disabled>
+            </div>
+        </fieldset>
+        <input type="submit" class="btn branded-btn" value="Delete category" disabled/>
+    </form>
+</section>
+{% endblock %}
+
+{% block injected_js %}
+<script src="{% static 'js/administration.js' %}"></script>
+{% endblock %}

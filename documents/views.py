@@ -169,7 +169,6 @@ def oauth2Callback(request):
     OAuth server. The authentication process is completed
     within the function.
     """
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     state = request.session['state']
 
     try:

@@ -46,6 +46,11 @@ $(document).ready(function(){
         })
     });
 
+    /*
+    Click listener removes the disabled attribute on the submit button if
+    the input has a value within it - want to prevent submission of the form
+    if an option isn't selected from the Users dropdown menu.
+    */
     $('#users').click(function(){
         if ($(this).val()) {
             $('input[type=submit]').attr("disabled", false);
@@ -70,6 +75,7 @@ $(document).ready(function(){
         btnValue = "Edit";
         btnCheckedValue = "edit";
     }
+    
     /*
     Alters the label on the create_category template to say
     'Name' rather than the actual field name of 'Friendly Name'.
@@ -89,10 +95,16 @@ $(document).ready(function(){
         }
     });
 
+    // Prepopulates the input field with the category name from the dropdown menu
     $('.category-option').click(function(){
         $('#id_friendly_name').val($(this).text());
     });
 
+    /*
+    Click listener removes the disabled attribute on the submit button if
+    the input has a value within it - want to prevent submission of the form
+    if an option isn't selected from the Categories dropdown menu.
+    */
     $('#categories').click(function(){
         if ($(this).val()) {
             $('input[type=submit]').attr("disabled", false);

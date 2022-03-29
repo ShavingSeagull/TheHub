@@ -1,6 +1,6 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.urls import reverse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import os
@@ -9,12 +9,8 @@ import hashlib
 import json
 import requests
 import google
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 import google_auth_oauthlib.flow
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from accounts.models import GoogleOauthCredentials
 from .models import Category, Tag
 from .helpers import *
@@ -61,27 +57,28 @@ def google_drive_service_build(request):
 @login_required
 def drive_api_search(request, query: str, page_size: int, ordering: str = None):
     """
-    The API call that handles file searching.
+    The API call that handles file searching on Google.
+
+    Params
+    ------
+    query: str
+        The query string to search files by
+    
+    page_size: int
+        The number of results to return. 1000 is the maximum
+
+    ordering: str
+        The order to filter the results by (such as ascending/descending)
     """
     drive = google_drive_service_build(request)
 
     files = drive.files().list(
         q=query,
         corpora="user",
-        # For production, will only need these fields:
-        # nextPageToken (perhaps?),
-        # files(
-        # id, name, mimeType, description?, 
-        # viewedByMe, viewedByMeTime, thumbnailLink?, createdTime,
-        # modifiedTime, modifiedByMe, modifiedByMeTime, sharedWithMeTime)
         fields="files(id, name, mimeType, description, properties, appProperties, owners, webViewLink)",
         orderBy=ordering,
         pageSize=page_size
-        # includeItemsFromAllDrives=True,
-        # supportsAllDrives=True
     ).execute()
-
-    # print(f"FILE METADATA: {files}")
 
     return json.dumps(files)
 
@@ -92,6 +89,20 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
     to their Drive account. Includes custom metadata that
     doesn't ship with Google Docs and Sheets as standard,
     such as tags and a category.
+
+    Params
+    ------
+    title: str
+        The document's title
+
+    doc_type: str
+        The document's type - either Doc or Sheet
+
+    tags: str
+        The list of tags converted to a string
+
+    category: str
+        The category of the document
     """
     if doc_type == 'Doc':
         mime_type = 'application/vnd.google-apps.document'
@@ -118,6 +129,10 @@ def drive_api_file_upload(request, title: str, doc_type: str, tags='', category=
 
 @login_required
 def authorize(request):
+    """
+    Initiates the authorisation request on Google OAuth server.
+    This will result in a callback method that handles the response.
+    """
     # Retrieves the contents of the Creds file if it doesn't already exist.
     # File is stored for use by Authorize and OAuth2Callback below.
     if not os.path.exists('oauth_creds.json'):
@@ -149,6 +164,11 @@ def authorize(request):
     return redirect(authorization_url)
 
 def oauth2Callback(request):
+    """
+    The callback that handles the response from Google's
+    OAuth server. The authentication process is completed
+    within the function.
+    """
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     state = request.session['state']
 

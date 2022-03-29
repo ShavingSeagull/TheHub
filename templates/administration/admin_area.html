@@ -36,21 +36,21 @@
 <section class="container">
     <div class="row mt-5">
         <div class="col-12 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
-            <a href="#">
+            <a href="{% url 'create_category' %}">
                 <p class="mb-4 mb-lg-5"><i class="fas fa-folder-plus"></i></p>
-                <p>Create Category/Tag</p>
+                <p>Create Category</p>
             </a>
         </div>
         <div class="col-12 offset-md-2 col-md-5 card selection-card p-4 mb-3 mb-md-5 text-center">
-            <a href="#">
+            <a href="{% url 'edit_category' %}">
                 <p class="mb-4 mb-lg-5"><i class="fas fa-folder"></i></p>
-                <p>Edit Category/Tag</p>
+                <p>Edit Category</p>
             </a>
         </div>
         <div class="col-12 col-md-5 card selection-card p-4 mb-3 mb-md-5 mx-auto text-center">
-            <a href="#">
+            <a href="{% url 'delete_category' %}">
                 <p class="mb-4 mb-lg-5"><i class="fas fa-folder-minus"></i></p>
-                <p>Remove Category/Tag</p>
+                <p>Remove Category</p>
             </a>
         </div>
 </section>

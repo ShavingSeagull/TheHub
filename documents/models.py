@@ -10,8 +10,8 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
         ordering = ['name']
 
-    name = models.CharField(max_length=20)
-    friendly_name = models.CharField(max_length=25)
+    name = models.CharField(max_length=40)
+    friendly_name = models.CharField(max_length=30)
 
     def __str__(self):
         return self.name

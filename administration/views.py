@@ -1,5 +1,5 @@
 from django.core import serializers
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from django.core.mail import send_mail, BadHeaderError
 from django.template.loader import render_to_string
-from .forms import CreateUserForm, EditUserForm, CreateCategoryForm
+from documents.models import Category
+from .forms import CreateUserForm, EditUserForm, CreateEditCategoryForm
 from .helpers import *
 
 @login_required
@@ -179,7 +180,7 @@ def create_category(request):
     Allows an admin user to create a new category for document creation.
     """
     if request.method == "POST":
-        form = CreateCategoryForm(request.POST)
+        form = CreateEditCategoryForm(request.POST)
         if form.is_valid():
             category_form = form.save(commit=False)
             category_form.name = category_name_converter(request.POST.get('friendly_name'))
@@ -190,12 +191,42 @@ def create_category(request):
             if not request.POST.get('add_extra_category'):
                 return redirect('admin_area')
     
-    form = CreateCategoryForm()
+    form = CreateEditCategoryForm()
     context = {
         'form': form
     }
 
     return render(request, "administration/create_category.html", context=context)
+
+@login_required
+@user_passes_test(lambda u:u.is_staff)
+def edit_category(request):
+    """
+    Allows an admin user to edit a category from within the
+    site itself, rather than using the Django admin panel.
+    """
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        category = get_object_or_404(Category, name=request.POST.get('categories'))
+        form = CreateEditCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            edit_form = form.save(commit=False)
+            edit_form.name = category_name_converter(request.POST.get('friendly_name'))
+            form.save()
+
+            messages.success(request, "Category edited successfully")
+
+            if not request.POST.get('edit_extra_category'):
+                return redirect('admin_area')
+
+    form = CreateEditCategoryForm()
+    context = {
+        'form': form,
+        'categories': categories
+    }
+
+    return render(request, "administration/edit_category.html", context=context)
 
 @login_required
 @user_passes_test(lambda u:u.is_staff)

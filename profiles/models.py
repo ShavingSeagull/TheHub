@@ -26,3 +26,16 @@ def create_or_update_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance, first_name=instance.first_name, last_name=instance.last_name)
     instance.profile.save()
+
+
+class Note(models.Model):
+    """
+    Model for the notes that users can leave themselves on their profile.
+    """
+    prof_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=False, blank=False)
+    content = models.TextField()
+    date_added = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
